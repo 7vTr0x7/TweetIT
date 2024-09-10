@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const socialUserSchema = new mongoose.Schema(
   {
+    avatarUrl: {
+      type: String,
+      required: true,
+    },
     userName: {
       type: String,
       required: true,
