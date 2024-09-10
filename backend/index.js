@@ -84,3 +84,26 @@ app.get("/api/posts/:postId", async (req, res) => {
     res.status(500).json({ error: `Failed to get post error: ${error}` });
   }
 });
+
+const editPost = async (data, id) => {
+  try {
+    const post = new SocialPosts.findByIdAndUpdate(id, data, { new: true });
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/posts/edit/:postId", async (req, res) => {
+  try {
+    const post = await editPost(req.body, req.params.postId);
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).json({ error: `Post not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to edit post error: ${error}` });
+  }
+});
