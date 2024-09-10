@@ -177,7 +177,7 @@ const deletePost = async (id) => {
   }
 };
 
-app.get("/api/user/posts/:postId", async (req, res) => {
+app.delete("/api/user/posts/:postId", async (req, res) => {
   try {
     const post = await deletePost(req.params.postId);
 
@@ -214,6 +214,29 @@ app.post("/api/users/bookmark/:postId/", async (req, res) => {
     res
       .status(500)
       .json({ error: `Failed to bookmark a post error: ${error}` });
+  }
+});
+
+const getUserBookmarks = async (userId) => {
+  try {
+    const user = await SocialUser.findById(userId).populate("bookmarks");
+    return user.bookmarks;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/api/users/bookmark", async (req, res) => {
+  try {
+    const bookmarks = await getUserBookmarks(req.body);
+
+    if (bookmarks) {
+      res.json(bookmarks);
+    } else {
+      res.status(404).json({ error: `bookmarks not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get bookmarks error: ${error}` });
   }
 });
 
