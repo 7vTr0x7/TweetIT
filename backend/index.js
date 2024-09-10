@@ -323,6 +323,40 @@ app.post("/api/users/follow/:followUserId", async (req, res) => {
   }
 });
 
+const unFollowUser = async (userId, followUserId) => {
+  try {
+    const user = await SocialUser.findById(userId);
+    user.following = [...user.following].filter(
+      (id) => followUserId.toString() !== id
+    );
+    await user.save();
+
+    const followUser = await SocialUser.findById(followUserId);
+    followUser.followers = [...followUser.following].filter(
+      (id) => userId.toString() !== id
+    );
+    await followUser.save();
+
+    return user.following;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/users/unfollow/:followUserId", async (req, res) => {
+  try {
+    const user = await unFollowUser(req.body, req.params.followUserId);
+
+    if (user && user.length > 0) {
+      res.json(user);
+    } else {
+      res.status(404).json({ error: `user not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to follow user error: ${error}` });
+  }
+});
+
 const PORT = 4000;
 
 app.listen(PORT, () => {
