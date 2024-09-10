@@ -293,6 +293,34 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+const addUsers = async (usersData) => {
+  try {
+    const users = [];
+    for (let i = 0; i < usersData; i++) {
+      const newUser = new SocialUser(usersData[i]);
+      const savedUser = await newUser.save();
+      users.push(savedUser);
+    }
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/users", async (req, res) => {
+  try {
+    const users = await addUsers(req.body);
+
+    if (users && users.length > 0) {
+      res.json(users);
+    } else {
+      res.status(404).json({ error: `users not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get users error: ${error}` });
+  }
+});
+
 const followUser = async (userId, followUserId) => {
   try {
     const user = await SocialUser.findById(userId);
