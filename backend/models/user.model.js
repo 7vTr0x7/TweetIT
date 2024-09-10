@@ -29,19 +29,19 @@ const socialUserSchema = new mongoose.Schema(
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Posts",
+        ref: "SocialPosts",
       },
     ],
     bookmarks: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Posts",
+        ref: "SocialPosts",
       },
     ],
     likedPosts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Posts",
+        ref: "SocialPosts",
       },
     ],
   },
