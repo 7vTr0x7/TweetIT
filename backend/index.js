@@ -61,3 +61,26 @@ app.post("/api/user/post", async (req, res) => {
     res.status(500).json({ error: `Failed to add post error: ${error}` });
   }
 });
+
+const getPostById = async (id) => {
+  try {
+    const post = await SocialPosts.findById(id);
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/api/posts/:postId", async (req, res) => {
+  try {
+    const post = await getPostById(req.params.postId);
+
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).json({ error: `Post not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get post error: ${error}` });
+  }
+});
