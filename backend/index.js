@@ -296,7 +296,7 @@ app.get("/api/users", async (req, res) => {
 const addUsers = async (usersData) => {
   try {
     const users = [];
-    for (let i = 0; i < usersData; i++) {
+    for (let i = 0; i < usersData.length; i++) {
       const newUser = new SocialUser(usersData[i]);
       const savedUser = await newUser.save();
       users.push(savedUser);
