@@ -39,10 +39,15 @@ app.get("/api/posts", async (req, res) => {
   }
 });
 
-const addPost = async (post) => {
+const addPost = async (userId, post) => {
   try {
     const newPost = new SocialPosts(post);
     const savedPost = await newPost.save();
+
+    const user = await SocialUser.findById(userId);
+    user.posts.push(savedPost._id);
+    user.save();
+
     return savedPost;
   } catch (error) {
     console.log(error);
@@ -51,7 +56,7 @@ const addPost = async (post) => {
 
 app.post("/api/user/post", async (req, res) => {
   try {
-    const post = await addPost(req.body);
+    const post = await addPost(req.body.userId, req.body.post);
     if (post) {
       res.json(post);
     } else {
