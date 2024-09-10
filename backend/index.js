@@ -112,11 +112,11 @@ const likePost = async (postId, userId) => {
   try {
     const post = await SocialPosts.findById(postId);
     post.likesCount = post.likesCount + 1;
-    post.save();
+    await post.save();
 
     const user = await SocialUser.findById(userId);
     user.likedPosts.push(postId);
-    user.save();
+    await user.save();
 
     return post;
   } catch (error) {
@@ -141,13 +141,13 @@ const dislikePost = async (postId, userId) => {
   try {
     const post = await SocialPosts.findById(postId);
     post.likesCount = post.likesCount - 1;
-    post.save();
+    await post.save();
 
     const user = await SocialUser.findById(userId);
     user.likedPosts = [...user.likedPosts].filter(
       (id) => id.toString() !== postId
     );
-    user.save();
+    await user.save();
 
     return post;
   } catch (error) {
@@ -195,7 +195,8 @@ const addToUserBookmarks = async (userId, postId) => {
   try {
     const user = await SocialUser.findById(userId);
     user.bookmarks.push(postId);
-    user.save();
+    await user.save();
+    return user.bookmarks;
   } catch (error) {
     console.log(error);
   }
@@ -237,6 +238,58 @@ app.get("/api/users/bookmark", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: `Failed to get bookmarks error: ${error}` });
+  }
+});
+
+const removeUserBookmark = async (userId, postId) => {
+  try {
+    const user = await SocialUser.findById(userId);
+    user.bookmarks = [...user.bookmarks].filter(
+      (id) => id.toString() !== postId
+    );
+    await user.save();
+    return user.bookmarks;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/users/remove-bookmark/:postId", async (req, res) => {
+  try {
+    const bookmarks = await removeUserBookmark(req.body, req.params.postId);
+
+    if (bookmarks) {
+      res.json(bookmarks);
+    } else {
+      res.status(404).json({ error: `bookmark not found` });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: `Failed to remove bookmark error: ${error}` });
+  }
+});
+
+const getAllUsers = async () => {
+  try {
+    const users = await SocialUser.find();
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await getAllUsers();
+
+    if (users && users.length > 0) {
+      res.json(users);
+    } else {
+      res.status(404).json({ error: `users not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get users error: ${error}` });
   }
 });
 
