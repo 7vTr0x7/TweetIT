@@ -164,7 +164,7 @@ app.post("/api/posts/dislike/:postId", async (req, res) => {
       res.status(404).json({ error: `Post not found` });
     }
   } catch (error) {
-    res.status(500).json({ error: `Failed to like a post error: ${error}` });
+    res.status(500).json({ error: `Failed to dislike a post error: ${error}` });
   }
 });
 
@@ -188,6 +188,32 @@ app.get("/api/user/posts/:postId", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: `Failed to delete post error: ${error}` });
+  }
+});
+
+const addToUserBookmarks = async (userId, postId) => {
+  try {
+    const user = await SocialUser.findById(userId);
+    user.bookmarks.push(postId);
+    user.save();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/users/bookmark/:postId/", async (req, res) => {
+  try {
+    const post = await addToUserBookmarks(req.body, req.params.postId);
+
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).json({ error: `Post not found` });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: `Failed to bookmark a post error: ${error}` });
   }
 });
 
