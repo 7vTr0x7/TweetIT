@@ -293,6 +293,36 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
+const followUser = async (userId, followUserId) => {
+  try {
+    const user = await SocialUser.findById(userId);
+    user.following.push(followUserId);
+    await user.save();
+
+    const followUser = await SocialUser.findById(followUserId);
+    followUser.followers.push(userId);
+    await followUser.save();
+
+    return user.following;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/users/follow/:followUserId", async (req, res) => {
+  try {
+    const user = await followUser(req.body, req.params.followUserId);
+
+    if (user && user.length > 0) {
+      res.json(user);
+    } else {
+      res.status(404).json({ error: `user not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to follow user error: ${error}` });
+  }
+});
+
 const PORT = 4000;
 
 app.listen(PORT, () => {
