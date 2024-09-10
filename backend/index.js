@@ -107,3 +107,32 @@ app.post("/api/posts/edit/:postId", async (req, res) => {
     res.status(500).json({ error: `Failed to edit post error: ${error}` });
   }
 });
+
+const likePost = async (postId, userId) => {
+  try {
+    const post = await SocialPosts.findById(postId);
+    post.likesCount = post.likesCount + 1;
+    post.save();
+
+    const user = await SocialUser.findById(userId);
+    user.likedPosts.push(postId);
+    user.save();
+
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.post("/api/posts/like/:postId", async (req, res) => {
+  try {
+    const post = await likePost(req.params.postId, req.body);
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).json({ error: `Post not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to like a post error: ${error}` });
+  }
+});
