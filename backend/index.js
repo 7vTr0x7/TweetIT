@@ -400,6 +400,29 @@ app.post("/api/users/unfollow/:followUserId", async (req, res) => {
   }
 });
 
+const getUserPosts = async (userId) => {
+  try {
+    const user = await SocialUser.findById(userId).populate("posts");
+    return user.posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/api/users/user/posts", async (req, res) => {
+  try {
+    const posts = await getUserPosts(req.body.userId);
+
+    if (posts && posts.length > 0) {
+      res.json(posts);
+    } else {
+      res.status(404).json({ error: `posts not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get posts error: ${error}` });
+  }
+});
+
 const PORT = 4000;
 
 app.listen(PORT, () => {
