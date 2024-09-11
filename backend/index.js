@@ -432,7 +432,7 @@ const getUserById = async (userId) => {
   }
 };
 
-app.get("/api/user/user/:userId", async (req, res) => {
+app.get("/api/users/user/:userId", async (req, res) => {
   try {
   } catch (error) {
     try {
