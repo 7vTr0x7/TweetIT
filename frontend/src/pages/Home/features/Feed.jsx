@@ -29,7 +29,7 @@ const Main = () => {
       {isPostOpen && (
         <div className="d-flex justify-content-center ">
           <div
-            className="p-3 rounded-3 position-absolute z-2 shadow-sm"
+            className="p-3 rounded-3 position-absolute z-2 shadow-lg"
             style={{ backgroundColor: "white", width: "70%", top: "20px" }}>
             <span className="px-1 py-3" onClick={() => setIsPostOpen(false)}>
               <FaArrowLeftLong style={{ fontSize: "20px" }} />
@@ -62,7 +62,7 @@ const Main = () => {
           <div
             className="position-absolute px-3 py-2 "
             style={{ right: "10px", top: "30px", cursor: "pointer" }}>
-            <ul className="list-group fw-semibold z-2 shadow-sm">
+            <ul className="list-group fw-semibold z-2 shadow-lg">
               <li
                 className="list-group-item"
                 onClick={() => setFilter("Latest")}>

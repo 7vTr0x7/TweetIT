@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../components/Header";
 import Nav from "../../components/Nav";
 import FollowSection from "../../components/FollowSection";
-import Main from "./features/Main";
+import Feed from "./features/Feed";
 
 const Home = () => {
   return (
@@ -14,7 +14,7 @@ const Home = () => {
             <Nav />
           </div>
           <div className="col-md-6">
-            <Main />
+            <Feed />
           </div>
           <div className="col-md-3">
             <FollowSection />
