@@ -44,7 +44,10 @@ const addPost = async (userId, post) => {
     const user = await SocialUser.findById(userId);
     const { avatarUrl, userName, userAt } = user;
 
-    const newPost = new SocialPosts({ avatarUrl, userName, userAt, ...post });
+    const newPost = new SocialPosts({
+      ...post,
+      user: { avatarUrl, userName, userAt },
+    });
     const savedPost = await newPost.save();
 
     user.posts.push(savedPost._id);
