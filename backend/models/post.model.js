@@ -31,6 +31,12 @@ const SocialPostSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SocialUser",
+      },
+    ],
     comments: [
       {
         user: {
