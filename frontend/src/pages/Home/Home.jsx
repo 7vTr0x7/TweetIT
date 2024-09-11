@@ -5,6 +5,7 @@ const Home = () => {
   return (
     <>
       <Header />
+      <main className="container bg-bg-body-tertiary"></main>
     </>
   );
 };
