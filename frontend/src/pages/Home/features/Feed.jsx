@@ -4,6 +4,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaRegImage } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
 import { FiSliders } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
 
 const Main = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
