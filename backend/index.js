@@ -175,9 +175,14 @@ app.post("/api/posts/dislike/:postId", async (req, res) => {
   }
 });
 
-const deletePost = async (id) => {
+const deletePost = async (postId, userId) => {
   try {
-    const post = await SocialPosts.findByIdAndDelete(id);
+    const user = await SocialUser.findById(userId);
+    user.posts = [...user.posts].filter((id) => id.toString() !== postId);
+
+    await user.save();
+
+    const post = await SocialPosts.findByIdAndDelete(postId);
     return post;
   } catch (error) {
     console.log(error);
@@ -186,7 +191,7 @@ const deletePost = async (id) => {
 
 app.delete("/api/user/posts/:postId", async (req, res) => {
   try {
-    const post = await deletePost(req.params.postId);
+    const post = await deletePost(req.params.postId, req.body);
 
     if (post) {
       res.json(post);
