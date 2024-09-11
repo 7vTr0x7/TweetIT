@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <main className="my-4 bg-body-tertiary container px-4">
+      <main className="my-1 bg-body-tertiary container px-4">
         <div className="row">
           <div className="col-md-3 ">
             <Nav />
