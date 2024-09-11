@@ -1,15 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FaRegImage } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
 import { FiSliders } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { readUser } from "../../Profile/userSlice";
 
 const Main = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
   const [filter, setFilter] = useState("Latest");
+  const [posts, setPosts] = useState([]);
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+
+  useEffect(() => {
+    dispatch(readUser());
+  }, []);
+
+  const getPosts = async (userId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/users/user/posts/${userId}`
+      );
+
+      if (!res.ok) {
+        console.log("Failed to get user");
+      }
+
+      const data = await res.json();
+      if (data) {
+        setPosts(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user._id) {
+      getPosts(user._id);
+    }
+  }, [user]);
 
   return (
     <div className="position-relative">

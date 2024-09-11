@@ -409,9 +409,9 @@ const getUserPosts = async (userId) => {
   }
 };
 
-app.get("/api/users/user/posts", async (req, res) => {
+app.get("/api/users/user/posts/:userId", async (req, res) => {
   try {
-    const posts = await getUserPosts(req.body.userId);
+    const posts = await getUserPosts(req.params.userId);
 
     if (posts && posts.length > 0) {
       res.json(posts);
@@ -432,20 +432,17 @@ const getUserById = async (userId) => {
   }
 };
 
-app.get("/api/users/user/:userId", async (req, res) => {
+app.get("/api/users/user/id/:userId", async (req, res) => {
   try {
-  } catch (error) {
-    try {
-      const user = await getUserById(req.body.userId);
+    const user = await getUserById(req.params.userId);
 
-      if (user) {
-        res.json(user);
-      } else {
-        res.status(404).json({ error: `user not found` });
-      }
-    } catch (error) {
-      res.status(500).json({ error: `Failed to get user error: ${error}` });
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ error: `user not found` });
     }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to get user error: ${error}` });
   }
 });
 
