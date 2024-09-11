@@ -117,6 +117,7 @@ const Main = () => {
           </div>
         )}
       </div>
+      {posts && posts.length > 0}
     </div>
   );
 };
