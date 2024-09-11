@@ -53,8 +53,8 @@ const Main = () => {
         className="my-3 py-2 px-3 d-flex rounded-3"
         style={{ backgroundColor: "white" }}>
         <img
-          src="https://via.placeholder.com/50"
-          style={{ borderRadius: "100%" }}
+          src={user ? user.avatarUrl : "https://via.placeholder.com/50"}
+          style={{ height: "50px", width: "50px", borderRadius: "100%" }}
         />
         <p
           className="m-0 px-4 fw-semibold"
