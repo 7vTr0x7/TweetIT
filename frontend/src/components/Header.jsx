@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <header className="container py-3">
       <h3 className="text-dark">
-        Tweet<span className="text-primary">IT</span>
+        Tweet<span className="text-secondary">IT</span>
       </h3>
     </header>
   );
