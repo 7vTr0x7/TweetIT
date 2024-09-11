@@ -6,6 +6,7 @@ import { MdGif } from "react-icons/md";
 import { FiSliders } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { readUser } from "../../Profile/userSlice";
+import Post from "../../../components/Post";
 
 const Main = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
@@ -117,7 +118,13 @@ const Main = () => {
           </div>
         )}
       </div>
-      {posts && posts.length > 0}
+      {posts &&
+        posts.length > 0 &&
+        posts.map((post) => (
+          <div key={post._id}>
+            <Post post={post} />
+          </div>
+        ))}
     </div>
   );
 };
