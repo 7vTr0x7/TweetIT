@@ -41,10 +41,12 @@ app.get("/api/posts", async (req, res) => {
 
 const addPost = async (userId, post) => {
   try {
-    const newPost = new SocialPosts(post);
+    const user = await SocialUser.findById(userId);
+    const { avatarUrl, userName, userAt } = user;
+
+    const newPost = new SocialPosts({ avatarUrl, userName, userAt, ...post });
     const savedPost = await newPost.save();
 
-    const user = await SocialUser.findById(userId);
     user.posts.push(savedPost._id);
     user.save();
 
