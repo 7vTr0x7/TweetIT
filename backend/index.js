@@ -423,6 +423,32 @@ app.get("/api/users/user/posts", async (req, res) => {
   }
 });
 
+const getUserById = async (userId) => {
+  try {
+    const user = await SocialUser.findById(userId);
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+app.get("/api/user/user/:userId", async (req, res) => {
+  try {
+  } catch (error) {
+    try {
+      const user = await getUserById(req.body.userId);
+
+      if (user) {
+        res.json(user);
+      } else {
+        res.status(404).json({ error: `user not found` });
+      }
+    } catch (error) {
+      res.status(500).json({ error: `Failed to get user error: ${error}` });
+    }
+  }
+});
+
 const PORT = 4000;
 
 app.listen(PORT, () => {
