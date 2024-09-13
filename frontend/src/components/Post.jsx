@@ -16,6 +16,7 @@ import { readUser } from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
 import { readPosts } from "../pages/Home/features/userPostSlice";
 import { addToBookmark } from "../utils/functions/addToBookmark";
+import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -45,7 +46,16 @@ const Post = ({ post, user }) => {
     addToBookmark(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
         dispatch(readPosts(user._id)).then(() => {
-          toast.success("Added Bookmark");
+          toast.success("Added to Bookmark");
+        });
+      });
+    });
+  };
+  const removeFromBookmarkHandler = (id) => {
+    removeFromBookmark(id, user._id).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(user._id)).then(() => {
+          toast.success("Removed From Bookmark");
         });
       });
     });
@@ -118,7 +128,7 @@ const Post = ({ post, user }) => {
             </span>
           </p>
           {user.bookmarks.includes(post._id) ? (
-            <span>
+            <span onClick={() => removeFromBookmarkHandler(post._id)}>
               <FaBookmark />
             </span>
           ) : (

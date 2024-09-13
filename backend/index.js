@@ -271,7 +271,10 @@ const removeUserBookmark = async (userId, postId) => {
 
 app.post("/api/users/remove-bookmark/:postId", async (req, res) => {
   try {
-    const bookmarks = await removeUserBookmark(req.body, req.params.postId);
+    const bookmarks = await removeUserBookmark(
+      req.body.userId,
+      req.params.postId
+    );
 
     if (bookmarks) {
       res.json(bookmarks);
