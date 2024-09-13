@@ -19,6 +19,36 @@ export const readPosts = createAsyncThunk("readPosts", async (id) => {
   }
 });
 
+export const editPost = createAsyncThunk(
+  "editPost",
+  async ({ postId, description }) => {
+    try {
+      if (postId) {
+        console.log({ description: description });
+        const res = await fetch(
+          `http://localhost:4000/api/posts/edit/${postId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ description: description }),
+          }
+        );
+
+        if (!res.ok) {
+          console.log("Failed to get user");
+        }
+
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const userPostSlice = createSlice({
   name: "userPosts",
   initialState: {
@@ -43,6 +73,15 @@ const userPostSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(readPosts.rejected, (state, action) => {
+      state.status = "error";
+    });
+    builder.addCase(editPost.pending, (state, action) => {
+      state.status = "Loading";
+    });
+    builder.addCase(editPost.fulfilled, (state, action) => {
+      state.status = "Success";
+    });
+    builder.addCase(editPost.rejected, (state, action) => {
       state.status = "error";
     });
   },

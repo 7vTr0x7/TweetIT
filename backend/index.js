@@ -97,7 +97,7 @@ app.get("/api/posts/:postId", async (req, res) => {
 
 const editPost = async (data, id) => {
   try {
-    const post = new SocialPosts.findByIdAndUpdate(id, data, { new: true });
+    const post = await SocialPosts.findByIdAndUpdate(id, data, { new: true });
 
     return post;
   } catch (error) {

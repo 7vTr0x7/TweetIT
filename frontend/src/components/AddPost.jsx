@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaRegImage } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
+import { readUser } from "../pages/Profile/userSlice";
+import { editPost, readPosts } from "../pages/Home/features/userPostSlice";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
-const AddPost = ({ setIsPostOpen, isEdit, content }) => {
+const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
+  const [description, setDescription] = useState(content);
+
+  const dispatch = useDispatch();
+
+  const editHandler = () => {
+    console.log(postId);
+    dispatch(editPost(postId, description)).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(userId)).then(() => {
+          toast.success("Post Edited");
+          setIsPostOpen(false);
+        });
+      });
+    });
+  };
+
   return (
     <div className="d-flex justify-content-center ">
       <div
@@ -21,7 +41,8 @@ const AddPost = ({ setIsPostOpen, isEdit, content }) => {
           <textarea
             className="form-control my-3"
             placeholder="What is Happening?"
-            value={isEdit && content}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             rows="5"></textarea>
         </div>
         <div className="d-flex justify-content-between">
@@ -29,7 +50,13 @@ const AddPost = ({ setIsPostOpen, isEdit, content }) => {
             <FaRegImage style={{ fontSize: "20px" }} />
             <MdGif style={{ fontSize: "30px", marginLeft: "10px" }} />
           </div>
-          <button className="btn btn-light fw-semibold">Post</button>
+          {isEdit ? (
+            <button className="btn btn-light fw-semibold" onClick={editHandler}>
+              Edit
+            </button>
+          ) : (
+            <button className="btn btn-light fw-semibold">Post</button>
+          )}
         </div>
       </div>
     </div>

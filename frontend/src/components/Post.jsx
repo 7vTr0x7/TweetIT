@@ -103,6 +103,8 @@ const Post = ({ post, user }) => {
             <AddPost
               setIsPostOpen={setIsEdit}
               isEdit={isEdit}
+              postId={post._id}
+              userId={user._id}
               content={post.description}
             />
           )}
