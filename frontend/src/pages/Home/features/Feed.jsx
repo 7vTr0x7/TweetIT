@@ -7,67 +7,25 @@ import { FiSliders } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { readUser } from "../../Profile/userSlice";
 import Post from "../../../components/Post";
+import { useGetPosts } from "../../../hooks/useGetPosts";
+import { useSortPost } from "../../../hooks/useSortPost";
 
 const Feed = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
   const [filter, setFilter] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const { _id } = user;
 
   useEffect(() => {
     dispatch(readUser());
   }, []);
 
-  const getPosts = async (userId) => {
-    try {
-      const res = await fetch(
-        `http://localhost:4000/api/users/user/posts/${userId}`
-      );
+  const postsArray = useGetPosts(_id);
 
-      if (!res.ok) {
-        console.log("Failed to get user");
-      }
-
-      const data = await res.json();
-      if (data) {
-        setPosts(data);
-        setFilteredPosts(data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (user._id) {
-      getPosts(user._id);
-    }
-  }, [user]);
-
-  const sortPost = () => {
-    if (filter === "Latest") {
-      const filtered = [...filteredPosts].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      console.log(filtered);
-      setFilteredPosts(filtered);
-    } else {
-      const filtered = [...filteredPosts].sort(
-        (a, b) => b.likesCount - a.likesCount
-      );
-      setFilteredPosts(filtered);
-    }
-  };
-
-  useEffect(() => {
-    sortPost();
-  }, [filter]);
-
+  const filteredPosts = useSortPost(filter, postsArray);
   return (
     <>
       <div className="position-relative mb-5">

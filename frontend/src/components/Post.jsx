@@ -12,6 +12,10 @@ const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const date = new Date(post.createdAt);
 
+  const likePostHandler = async () => {
+    trycatch;
+  };
+
   return (
     <>
       <div
@@ -62,13 +66,15 @@ const Post = ({ post, user }) => {
         </div>
         <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
           <p className="m-0">
-            <span>
-              {user.likedPosts.includes(post._id) ? (
+            {user.likedPosts.includes(post._id) ? (
+              <span>
                 <FaRegHeart style={{ color: "red" }} />
-              ) : (
+              </span>
+            ) : (
+              <span>
                 <FaRegHeart />
-              )}
-            </span>
+              </span>
+            )}
             <span className=" px-1 ">{post.likesCount}</span>
           </p>
           <p className="m-0">
@@ -76,13 +82,15 @@ const Post = ({ post, user }) => {
               <FaRegComment />
             </span>
           </p>
-          <span>
-            {user.bookmarks.includes(post._id) ? (
+          {user.bookmarks.includes(post._id) ? (
+            <span>
               <FaRegBookmark style={{ color: "black" }} />
-            ) : (
+            </span>
+          ) : (
+            <span>
               <FaRegBookmark />
-            )}
-          </span>
+            </span>
+          )}
           <span>
             <IoMdShare />
           </span>
