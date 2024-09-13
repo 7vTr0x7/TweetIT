@@ -11,8 +11,9 @@ import Post from "../../../components/Post";
 const Feed = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
-  const [filter, setFilter] = useState("Latest");
+  const [filter, setFilter] = useState("");
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
@@ -34,6 +35,7 @@ const Feed = () => {
       const data = await res.json();
       if (data) {
         setPosts(data);
+        setFilteredPosts(data);
       }
     } catch (error) {
       console.log(error);
@@ -45,6 +47,26 @@ const Feed = () => {
       getPosts(user._id);
     }
   }, [user]);
+
+  const sortPost = () => {
+    if (filter === "Latest") {
+      const filtered = [...filteredPosts].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      console.log(filtered);
+      setFilteredPosts(filtered);
+    } else {
+      const filtered = [...filteredPosts].sort(
+        (a, b) => b.likesCount - a.likesCount
+      );
+      setFilteredPosts(filtered);
+    }
+  };
+
+  useEffect(() => {
+    sortPost();
+  }, [filter]);
 
   return (
     <>
@@ -95,7 +117,7 @@ const Feed = () => {
 
         <div className="position-relative" style={{ backgroundColor: "white" }}>
           <div className="d-flex justify-content-between  my-4 px-3 py-2">
-            <p className="m-0 fw-semibold">{filter} Post</p>
+            <p className="m-0 fw-semibold">{filter} Posts</p>
             <span onClick={() => setIsFilter((prev) => !prev)}>
               <FiSliders />
             </span>
@@ -115,18 +137,13 @@ const Feed = () => {
                   onClick={() => setFilter("Trending")}>
                   Trending
                 </li>
-                <li
-                  className="list-group-item"
-                  onClick={() => setFilter("Oldest")}>
-                  Oldest
-                </li>
               </ul>
             </div>
           )}
         </div>
-        {posts &&
-          posts.length > 0 &&
-          posts.map((post) => (
+        {filteredPosts &&
+          filteredPosts.length > 0 &&
+          filteredPosts.map((post) => (
             <div key={post._id}>
               <Post post={post} />
             </div>
