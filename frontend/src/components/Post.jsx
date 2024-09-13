@@ -7,13 +7,14 @@ import { FaRegHeart } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
+import { likeAPost } from "../utils/functions/likePost";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const date = new Date(post.createdAt);
 
-  const likePostHandler = async () => {
-    trycatch;
+  const likeHandler = async (id) => {
+    await likeAPost(id, user._id);
   };
 
   return (
@@ -71,7 +72,7 @@ const Post = ({ post, user }) => {
                 <FaRegHeart style={{ color: "red" }} />
               </span>
             ) : (
-              <span>
+              <span onClick={() => likeHandler(post._id)}>
                 <FaRegHeart />
               </span>
             )}
