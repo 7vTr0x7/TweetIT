@@ -10,6 +10,7 @@ import Post from "../../../components/Post";
 import { useGetPosts } from "../../../hooks/useGetPosts";
 import { useSortPost } from "../../../hooks/useSortPost";
 import { readPosts } from "./userPostSlice";
+import AddPost from "../../../components/AddPost";
 
 const Feed = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
@@ -47,35 +48,7 @@ const Feed = () => {
             What is happening?
           </p>
         </div>
-        {isPostOpen && (
-          <div className="d-flex justify-content-center ">
-            <div
-              className="p-3 rounded-3 position-absolute z-2 shadow-lg"
-              style={{
-                backgroundColor: "white",
-                width: "70%",
-                top: "20px",
-                zIndex: 10,
-              }}>
-              <span className="px-1 py-3" onClick={() => setIsPostOpen(false)}>
-                <FaArrowLeftLong style={{ fontSize: "20px" }} />
-              </span>
-              <div>
-                <textarea
-                  className="form-control my-3"
-                  placeholder="What is Happening?"
-                  rows="5"></textarea>
-              </div>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <FaRegImage style={{ fontSize: "20px" }} />
-                  <MdGif style={{ fontSize: "30px", marginLeft: "10px" }} />
-                </div>
-                <button className="btn btn-light fw-semibold">Post</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {isPostOpen && <AddPost setIsPostOpen={setIsPostOpen} />}
 
         <div className="position-relative" style={{ backgroundColor: "white" }}>
           <div className="d-flex justify-content-between  my-4 px-3 py-2">
