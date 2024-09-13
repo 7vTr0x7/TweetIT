@@ -219,7 +219,7 @@ const addToUserBookmarks = async (userId, postId) => {
 
 app.post("/api/users/bookmark/:postId/", async (req, res) => {
   try {
-    const post = await addToUserBookmarks(req.body, req.params.postId);
+    const post = await addToUserBookmarks(req.body.userId, req.params.postId);
 
     if (post) {
       res.json(post);

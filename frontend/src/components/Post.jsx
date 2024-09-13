@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { readUser } from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
 import { readPosts } from "../pages/Home/features/userPostSlice";
+import { addToBookmark } from "../utils/functions/addToBookmark";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -35,6 +36,16 @@ const Post = ({ post, user }) => {
       dispatch(readUser()).then(() => {
         dispatch(readPosts(user._id)).then(() => {
           toast.success("Like Removed");
+        });
+      });
+    });
+  };
+
+  const addToBookmarkHandler = (id) => {
+    addToBookmark(id, user._id).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(user._id)).then(() => {
+          toast.success("Added Bookmark");
         });
       });
     });
@@ -111,7 +122,7 @@ const Post = ({ post, user }) => {
               <FaBookmark />
             </span>
           ) : (
-            <span>
+            <span onClick={() => addToBookmarkHandler(post._id)}>
               <FaRegBookmark />
             </span>
           )}
