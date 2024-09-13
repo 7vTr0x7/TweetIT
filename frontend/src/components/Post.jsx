@@ -17,9 +17,12 @@ import { dislikeAPost } from "../utils/functions/dislikePost";
 import { readPosts } from "../pages/Home/features/userPostSlice";
 import { addToBookmark } from "../utils/functions/addToBookmark";
 import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
+import AddPost from "./AddPost";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const date = new Date(post.createdAt);
 
   const dispatch = useDispatch();
@@ -61,6 +64,11 @@ const Post = ({ post, user }) => {
     });
   };
 
+  const editHandler = () => {
+    setIsEdit(true);
+    setIsOptionOpen(false);
+  };
+
   return (
     <>
       <div
@@ -91,6 +99,14 @@ const Post = ({ post, user }) => {
           </span>
         </div>
         <div className="position-relative">
+          {isEdit && (
+            <AddPost
+              setIsPostOpen={setIsEdit}
+              isEdit={isEdit}
+              content={post.description}
+            />
+          )}
+
           {isOptionOpen && (
             <div
               className="position-absolute fw-semibold shadow-lg px-3 py-2 rounded-3 z-1"
@@ -100,7 +116,9 @@ const Post = ({ post, user }) => {
                 top: "0px",
                 cursor: "pointer",
               }}>
-              <p className="m-0">Edit</p>
+              <p className="m-0" onClick={editHandler}>
+                Edit
+              </p>
               <p className="m-0">Delete</p>
             </div>
           )}

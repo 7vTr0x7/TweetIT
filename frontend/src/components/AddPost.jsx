@@ -3,7 +3,7 @@ import { FaRegImage } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
 
-const AddPost = ({ setIsPostOpen }) => {
+const AddPost = ({ setIsPostOpen, isEdit, content }) => {
   return (
     <div className="d-flex justify-content-center ">
       <div
@@ -11,7 +11,7 @@ const AddPost = ({ setIsPostOpen }) => {
         style={{
           backgroundColor: "white",
           width: "70%",
-          top: "20px",
+          top: isEdit ? "0px" : "20px",
           zIndex: 10,
         }}>
         <span className="px-1 py-3" onClick={() => setIsPostOpen(false)}>
@@ -21,6 +21,7 @@ const AddPost = ({ setIsPostOpen }) => {
           <textarea
             className="form-control my-3"
             placeholder="What is Happening?"
+            value={isEdit && content}
             rows="5"></textarea>
         </div>
         <div className="d-flex justify-content-between">
