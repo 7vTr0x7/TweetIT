@@ -167,7 +167,7 @@ const dislikePost = async (postId, userId) => {
 
 app.post("/api/posts/dislike/:postId", async (req, res) => {
   try {
-    const post = await dislikePost(req.params.postId, req.body);
+    const post = await dislikePost(req.params.postId, req.body.userId);
     if (post) {
       res.json(post);
     } else {
