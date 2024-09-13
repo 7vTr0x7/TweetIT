@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { HiDotsVertical } from "react-icons/hi";
 import { RxCross2 } from "react-icons/rx";
+import { Toaster, toast } from "react-hot-toast";
 
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
@@ -23,14 +24,18 @@ const Post = ({ post, user }) => {
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {});
+        dispatch(readPosts(user._id)).then(() => {
+          toast.success("Like Added");
+        });
       });
     });
   };
   const dislikeHandler = async (id) => {
     dislikeAPost(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {});
+        dispatch(readPosts(user._id)).then(() => {
+          toast.success("Like Removed");
+        });
       });
     });
   };
@@ -115,6 +120,7 @@ const Post = ({ post, user }) => {
           </span>
         </div>
       </div>
+      <Toaster />
     </>
   );
 };
