@@ -10,6 +10,7 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { likeAPost } from "../utils/functions/likePost";
 import { useDispatch } from "react-redux";
 import { readUser } from "./../pages/Profile/userSlice";
+import { dislikeAPost } from "../utils/functions/dislikePost";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -18,6 +19,11 @@ const Post = ({ post, user }) => {
   const dispatch = useDispatch();
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
+      dispatch(readUser()).then(() => {});
+    });
+  };
+  const dislikeHandler = async (id) => {
+    dislikeAPost(id, user._id).then(() => {
       dispatch(readUser()).then(() => {});
     });
   };
@@ -74,6 +80,7 @@ const Post = ({ post, user }) => {
           <p className="m-0">
             {user.likedPosts.includes(post._id) ? (
               <span
+                onClick={() => dislikeHandler(post._id)}
                 style={{
                   backgroundColor: "lightgray",
                   padding: "0px 3px",
