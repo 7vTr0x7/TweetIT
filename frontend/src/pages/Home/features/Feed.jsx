@@ -145,7 +145,7 @@ const Feed = () => {
           filteredPosts.length > 0 &&
           filteredPosts.map((post) => (
             <div key={post._id}>
-              <Post post={post} />
+              {user && post && <Post post={post} user={user} />}
             </div>
           ))}
       </div>

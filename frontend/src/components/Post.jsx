@@ -8,7 +8,7 @@ import { IoMdShare } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
 
-const Post = ({ post }) => {
+const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const date = new Date(post.createdAt);
 
@@ -63,7 +63,11 @@ const Post = ({ post }) => {
         <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
           <p className="m-0">
             <span>
-              <FaRegHeart />
+              {user.likedPosts.includes(post._id) ? (
+                <FaRegHeart style={{ color: "red" }} />
+              ) : (
+                <FaRegHeart />
+              )}
             </span>
             <span className=" px-1 ">{post.likesCount}</span>
           </p>
@@ -73,7 +77,11 @@ const Post = ({ post }) => {
             </span>
           </p>
           <span>
-            <FaRegBookmark />
+            {user.bookmarks.includes(post._id) ? (
+              <FaRegBookmark style={{ color: "black" }} />
+            ) : (
+              <FaRegBookmark />
+            )}
           </span>
           <span>
             <IoMdShare />
