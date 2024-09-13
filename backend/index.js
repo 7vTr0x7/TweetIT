@@ -136,7 +136,7 @@ const likePost = async (postId, userId) => {
 
 app.post("/api/posts/like/:postId", async (req, res) => {
   try {
-    const post = await likePost(req.params.postId, req.body);
+    const post = await likePost(req.params.postId, req.body.userId);
     if (post) {
       res.json(post);
     } else {

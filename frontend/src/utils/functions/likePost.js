@@ -6,7 +6,7 @@ export const likeAPost = async (id, userId) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: userId,
+      body: JSON.stringify({ userId }),
     });
 
     if (!res.ok) {
