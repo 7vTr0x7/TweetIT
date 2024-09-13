@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const readPosts = createAsyncThunk("readPosts", async (id) => {
+export const readPosts = createAsyncThunk("readPosts", async (id) => {
   try {
     if (id) {
       const res = await fetch(

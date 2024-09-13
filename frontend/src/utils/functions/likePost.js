@@ -1,6 +1,5 @@
 export const likeAPost = async (id, userId) => {
   try {
-    console.log(userId);
     const res = await fetch(`http://localhost:4000/api/posts/like/${id}`, {
       method: "POST",
       headers: {

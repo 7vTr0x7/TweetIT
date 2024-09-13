@@ -3,14 +3,17 @@ import React, { useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import { RxCross2 } from "react-icons/rx";
 
+import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
+import { FaBookmark } from "react-icons/fa6";
 import { likeAPost } from "../utils/functions/likePost";
 import { useDispatch } from "react-redux";
 import { readUser } from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
+import { readPosts } from "../pages/Home/features/userPostSlice";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -19,12 +22,16 @@ const Post = ({ post, user }) => {
   const dispatch = useDispatch();
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {});
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(user._id)).then(() => {});
+      });
     });
   };
   const dislikeHandler = async (id) => {
     dislikeAPost(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {});
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(user._id)).then(() => {});
+      });
     });
   };
 
@@ -79,17 +86,10 @@ const Post = ({ post, user }) => {
         <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
           <p className="m-0">
             {user.likedPosts.includes(post._id) ? (
-              <span
-                onClick={() => dislikeHandler(post._id)}
-                style={{
-                  backgroundColor: "lightgray",
-                  padding: "0px 3px",
-                  paddingBottom: "2px",
-                  borderRadius: "100%",
-                }}>
-                <FaRegHeart
+              <span onClick={() => dislikeHandler(post._id)}>
+                <FaHeart
                   style={{
-                    color: "white",
+                    color: "red",
                   }}
                 />
               </span>
@@ -107,7 +107,7 @@ const Post = ({ post, user }) => {
           </p>
           {user.bookmarks.includes(post._id) ? (
             <span>
-              <FaRegBookmark style={{ color: "black" }} />
+              <FaBookmark />
             </span>
           ) : (
             <span>

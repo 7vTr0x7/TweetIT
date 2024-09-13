@@ -9,6 +9,7 @@ import { readUser } from "../../Profile/userSlice";
 import Post from "../../../components/Post";
 import { useGetPosts } from "../../../hooks/useGetPosts";
 import { useSortPost } from "../../../hooks/useSortPost";
+import { readPosts } from "./userPostSlice";
 
 const Feed = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
@@ -17,15 +18,18 @@ const Feed = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const posts = useSelector((state) => state.posts.posts);
   const { _id } = user;
 
   useEffect(() => {
-    dispatch(readUser());
-  }, []);
+    dispatch(readUser()).then(() => {
+      if (_id) {
+        dispatch(readPosts(_id)).then(() => {});
+      }
+    });
+  }, [dispatch, _id]);
 
-  const postsArray = useGetPosts(_id);
-
-  const filteredPosts = useSortPost(filter, postsArray);
+  const filteredPosts = useSortPost(filter, posts);
   return (
     <>
       <div className="position-relative mb-5">
