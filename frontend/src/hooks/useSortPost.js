@@ -20,7 +20,7 @@ export const useSortPost = (filter, posts) => {
     if (filter) {
       sortPost();
     }
-  }, [filter]);
+  }, [filter, posts]);
 
   return filteredPosts.length === 0 ? posts : filteredPosts;
 };

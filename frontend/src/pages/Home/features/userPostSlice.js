@@ -26,7 +26,14 @@ const userPostSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    updatePosts: (state, action) => {
+      return {
+        ...state,
+        posts: action.payload,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(readPosts.pending, (state, action) => {
       state.status = "Loading";
@@ -40,5 +47,7 @@ const userPostSlice = createSlice({
     });
   },
 });
+
+export const { updatePosts } = userPostSlice.actions;
 
 export default userPostSlice.reducer;

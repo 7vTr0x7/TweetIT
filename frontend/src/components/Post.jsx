@@ -87,11 +87,7 @@ const Post = ({ post, user }) => {
           <p className="m-0">
             {user.likedPosts.includes(post._id) ? (
               <span onClick={() => dislikeHandler(post._id)}>
-                <FaHeart
-                  style={{
-                    color: "red",
-                  }}
-                />
+                <FaHeart />
               </span>
             ) : (
               <span onClick={() => likeHandler(post._id)}>
