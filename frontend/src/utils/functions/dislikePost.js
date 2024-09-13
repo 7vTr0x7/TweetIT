@@ -14,7 +14,6 @@ export const dislikeAPost = async (id, userId) => {
     }
 
     const data = await res.json();
-    dispa;
   } catch (error) {
     console.log(error);
   }
