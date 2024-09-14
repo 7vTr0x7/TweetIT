@@ -122,6 +122,7 @@ const likePost = async (postId, userId) => {
   try {
     const post = await SocialPosts.findById(postId);
     post.likesCount = post.likesCount + 1;
+    post.likes.push(userId);
     await post.save();
 
     const user = await SocialUser.findById(userId);
@@ -150,7 +151,9 @@ app.post("/api/posts/like/:postId", async (req, res) => {
 const dislikePost = async (postId, userId) => {
   try {
     const post = await SocialPosts.findById(postId);
-    post.likesCount = post.likesCount - 1;
+    const minus = post.likesCount - 1;
+    post.likesCount = minus;
+    post.likes = [...post.likes].filter((id) => id.toString() !== userId);
     await post.save();
 
     const user = await SocialUser.findById(userId);

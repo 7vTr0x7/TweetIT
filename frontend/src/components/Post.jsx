@@ -28,20 +28,18 @@ const Post = ({ post, user }) => {
   const dispatch = useDispatch();
 
   const likeHandler = async (id) => {
-    likeAPost(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Like Added");
-        });
+    await likeAPost(id, user._id);
+    dispatch(readUser()).then(() => {
+      dispatch(readPosts(user._id)).then(() => {
+        toast.success("Like Added");
       });
     });
   };
   const dislikeHandler = async (id) => {
-    dislikeAPost(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Like Removed");
-        });
+    await dislikeAPost(id, user._id);
+    dispatch(readUser()).then(() => {
+      dispatch(readPosts(user._id)).then(() => {
+        toast.success("Like Removed");
       });
     });
   };
