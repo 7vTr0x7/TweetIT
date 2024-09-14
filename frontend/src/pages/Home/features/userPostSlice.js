@@ -8,7 +8,7 @@ export const readPosts = createAsyncThunk("readPosts", async (id) => {
       );
 
       if (!res.ok) {
-        console.log("Failed to get user");
+        console.log("Failed to get posts");
       }
 
       const data = await res.json();
@@ -36,12 +36,39 @@ export const editPost = createAsyncThunk(
         );
 
         if (!res.ok) {
-          console.log("Failed to get user");
+          console.log("Failed to edit post");
         }
 
         const data = await res.json();
         return data;
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const deletePost = createAsyncThunk(
+  "deletePost",
+  async ({ userId, postId }) => {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/user/posts/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        }
+      );
+
+      if (!res.ok) {
+        console.log("Failed to delete post");
+      }
+
+      const data = await res.json();
+      return data;
     } catch (error) {
       console.log(error);
     }
@@ -81,6 +108,15 @@ const userPostSlice = createSlice({
       state.status = "Success";
     });
     builder.addCase(editPost.rejected, (state, action) => {
+      state.status = "error";
+    });
+    builder.addCase(deletePost.pending, (state, action) => {
+      state.status = "Loading";
+    });
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      state.status = "Success";
+    });
+    builder.addCase(deletePost.rejected, (state, action) => {
       state.status = "error";
     });
   },

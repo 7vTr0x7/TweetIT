@@ -14,7 +14,7 @@ import { likeAPost } from "../utils/functions/likePost";
 import { useDispatch } from "react-redux";
 import { readUser } from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
-import { readPosts } from "../pages/Home/features/userPostSlice";
+import { deletePost, readPosts } from "../pages/Home/features/userPostSlice";
 import { addToBookmark } from "../utils/functions/addToBookmark";
 import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
 import AddPost from "./AddPost";
@@ -69,6 +69,16 @@ const Post = ({ post, user }) => {
     setIsOptionOpen(false);
   };
 
+  const deleteHandler = (postId) => {
+    dispatch(deletePost({ userId: user._id, postId })).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(user._id)).then(() => {
+          toast.success("Post Deleted");
+        });
+      });
+    });
+  };
+
   return (
     <>
       <div
@@ -121,7 +131,9 @@ const Post = ({ post, user }) => {
               <p className="m-0" onClick={editHandler}>
                 Edit
               </p>
-              <p className="m-0">Delete</p>
+              <p className="m-0" onClick={() => deleteHandler(post._id)}>
+                Delete
+              </p>
             </div>
           )}
         </div>

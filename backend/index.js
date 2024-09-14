@@ -182,6 +182,9 @@ const deletePost = async (postId, userId) => {
   try {
     const user = await SocialUser.findById(userId);
     user.posts = [...user.posts].filter((id) => id.toString() !== postId);
+    user.likedPosts = [...user.likedPosts].filter(
+      (id) => id.toString() !== postId
+    );
 
     await user.save();
 
@@ -194,7 +197,7 @@ const deletePost = async (postId, userId) => {
 
 app.delete("/api/user/posts/:postId", async (req, res) => {
   try {
-    const post = await deletePost(req.params.postId, req.body);
+    const post = await deletePost(req.params.postId, req.body.userId);
 
     if (post) {
       res.json(post);
