@@ -254,9 +254,9 @@ const getUserBookmarks = async (userId) => {
   }
 };
 
-app.get("/api/users/bookmark", async (req, res) => {
+app.get("/api/users/bookmark/:userId", async (req, res) => {
   try {
-    const bookmarks = await getUserBookmarks(req.body);
+    const bookmarks = await getUserBookmarks(req.params.userId);
 
     if (bookmarks) {
       res.json(bookmarks);
