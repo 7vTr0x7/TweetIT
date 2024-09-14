@@ -4,6 +4,7 @@ import Home from "./pages/Home/Home";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Explore from "./pages/Explore/Explore";
 import Bookmark from "./pages/Bookmark/Bookmark";
+import Profile from "./pages/Profile/Profile";
 
 const App = () => {
   return (
