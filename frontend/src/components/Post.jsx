@@ -26,6 +26,7 @@ const Post = ({ post, user }) => {
   const date = new Date(post.createdAt);
 
   const dispatch = useDispatch();
+
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
@@ -98,15 +99,19 @@ const Post = ({ post, user }) => {
               </p>
             </div>
           </div>
-          <span
-            style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => setIsOptionOpen((prev) => !prev)}>
-            {user.posts.includes(post._id) && isOptionOpen ? (
-              <RxCross2 style={{ fontSize: "25px" }} />
-            ) : (
-              <HiDotsVertical />
+          {user.posts &&
+            user.posts.length > 0 &&
+            user.posts.includes(post._id) && (
+              <span
+                style={{ fontSize: "20px", cursor: "pointer" }}
+                onClick={() => setIsOptionOpen((prev) => !prev)}>
+                {isOptionOpen ? (
+                  <RxCross2 style={{ fontSize: "25px" }} />
+                ) : (
+                  <HiDotsVertical />
+                )}
+              </span>
             )}
-          </span>
         </div>
         <div className="position-relative">
           {isEdit && (

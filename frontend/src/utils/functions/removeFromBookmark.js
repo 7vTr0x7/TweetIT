@@ -16,6 +16,7 @@ export const removeFromBookmark = async (id, userId) => {
     }
 
     const data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }
