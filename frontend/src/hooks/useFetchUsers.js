@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 
-export const useFetchUser = () => {
+export const useFetchUsers = () => {
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(
-        `https://tweet-it-backend.vercel.app/api/users/user/posts/${id}`
-      );
+      const res = await fetch(`https://tweet-it-backend.vercel.app/api/users`);
 
       if (!res.ok) {
         console.log("Failed to get user");
