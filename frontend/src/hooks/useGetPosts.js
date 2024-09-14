@@ -7,7 +7,7 @@ export const useGetPosts = (userId) => {
     try {
       if (id) {
         const res = await fetch(
-          `http://localhost:4000/api/users/user/posts/${id}`
+          `https://tweet-it-backend.vercel.app/api/users/user/posts/${id}`
         );
 
         if (!res.ok) {

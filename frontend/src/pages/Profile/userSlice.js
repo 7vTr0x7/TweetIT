@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const readUser = createAsyncThunk("readUser", async () => {
   try {
     const res = await fetch(
-      "http://localhost:4000/api/users/user/id/66e183147b64fafc1e2fa38a"
+      "https://tweet-it-backend.vercel.app/api/users/user/id/66e183147b64fafc1e2fa38a"
     );
 
     if (!res.ok) {

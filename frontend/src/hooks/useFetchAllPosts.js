@@ -5,7 +5,7 @@ export const useFetchAllPosts = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/posts");
+      const res = await fetch("https://tweet-it-backend.vercel.app/api/posts");
       if (!res.ok) {
         console.log("Failed to fetch posts");
       }

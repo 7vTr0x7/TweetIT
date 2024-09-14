@@ -4,7 +4,7 @@ export const readPosts = createAsyncThunk("readPosts", async (id) => {
   try {
     if (id) {
       const res = await fetch(
-        `http://localhost:4000/api/users/user/posts/${id}`
+        `https://tweet-it-backend.vercel.app/api/users/user/posts/${id}`
       );
 
       if (!res.ok) {
@@ -25,7 +25,7 @@ export const editPost = createAsyncThunk(
     try {
       if (postId) {
         const res = await fetch(
-          `http://localhost:4000/api/posts/edit/${postId}`,
+          `https://tweet-it-backend.vercel.app/api/posts/edit/${postId}`,
           {
             method: "POST",
             headers: {
@@ -53,7 +53,7 @@ export const deletePost = createAsyncThunk(
   async ({ userId, postId }) => {
     try {
       const res = await fetch(
-        `http://localhost:4000/api/user/posts/${postId}`,
+        `https://tweet-it-backend.vercel.app/api/user/posts/${postId}`,
         {
           method: "DELETE",
           headers: {
