@@ -27,6 +27,11 @@ const Explore = () => {
           </div>
           <div className="col-md-6 mb-5">
             <h4 className="text-center my-3 text-secondary">Explore</h4>
+            {posts.length === 0 && (
+              <p className="text-center fw-semibold my-3 text-secondary">
+                Loading...
+              </p>
+            )}
             {posts &&
               posts.map((post) => (
                 <div key={post._id}>

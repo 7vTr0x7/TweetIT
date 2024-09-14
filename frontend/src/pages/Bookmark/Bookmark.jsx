@@ -26,6 +26,11 @@ const Bookmark = () => {
           </div>
           <div className="col-md-6 mb-5">
             <h4 className="text-center my-3 text-secondary">Bookmarks</h4>
+            {bookmarkPosts.length === 0 && (
+              <p className="text-center fw-semibold my-3 text-secondary">
+                Loading...
+              </p>
+            )}
 
             {bookmarkPosts &&
               bookmarkPosts.map((post) => (

@@ -36,6 +36,11 @@ const FollowSection = () => {
         </p>
         <div className="card mt-1 mb-3 ">
           <div className="card-body">
+            {filteredUsers.length === 0 && (
+              <p className="text-center fw-semibold my-3 text-secondary">
+                Loading...
+              </p>
+            )}
             {filteredUsers &&
               filteredUsers.map((user) => (
                 <div
