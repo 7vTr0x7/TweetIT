@@ -12,14 +12,20 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
 
   const dispatch = useDispatch();
 
-  const editHandler = () => {
-    dispatch(editPost({ postId, description })).then(() => {
-      dispatch(readPosts(userId)).then(() => {
-        dispatch(readUser()).then(() => {
-          toast.success("Post Edited");
-          setIsPostOpen(false);
+  const editHandler = async () => {
+    dispatch(editPost({ postId, description })).then((editRes) => {
+      if (editRes) {
+        dispatch(readPosts(userId)).then((readRes) => {
+          if (readRes) {
+            dispatch(readUser()).then((userRes) => {
+              if (userRes) {
+                toast.success("Post Edited");
+                setIsPostOpen(false);
+              }
+            });
+          }
         });
-      });
+      }
     });
   };
 

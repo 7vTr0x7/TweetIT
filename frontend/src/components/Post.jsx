@@ -28,19 +28,25 @@ const Post = ({ post, user }) => {
   const dispatch = useDispatch();
 
   const likeHandler = async (id) => {
-    await likeAPost(id, user._id);
-    dispatch(readUser()).then(() => {
-      dispatch(readPosts(user._id)).then(() => {
-        toast.success("Like Added");
-      });
+    likeAPost(id, user._id).then((likeRes) => {
+      likeRes &&
+        dispatch(readUser()).then((userRes) => {
+          userRes &&
+            dispatch(readPosts(user._id)).then((postRes) => {
+              postRes && toast.success("Like Added");
+            });
+        });
     });
   };
   const dislikeHandler = async (id) => {
-    await dislikeAPost(id, user._id);
-    dispatch(readUser()).then(() => {
-      dispatch(readPosts(user._id)).then(() => {
-        toast.success("Like Removed");
-      });
+    dislikeAPost(id, user._id).then((dislikeRes) => {
+      dislikeRes &&
+        dispatch(readUser()).then((userRes) => {
+          userRes &&
+            dispatch(readPosts(user._id)).then((postRes) => {
+              postRes && toast.success("Like Removed");
+            });
+        });
     });
   };
 
@@ -79,108 +85,103 @@ const Post = ({ post, user }) => {
   };
 
   return (
-    user &&
-    post && (
-      <>
-        <div
-          className=" mt-3 p-3 rounded-3 "
-          style={{ backgroundColor: "white " }}>
-          <div className="d-flex justify-content-between align-content-center">
-            <div className="d-flex ">
-              <img
-                src={post.user.avatarUrl}
-                style={{ height: "50px", width: "50px", borderRadius: "100%" }}
-              />
-              <div>
-                <span className="m-0 px-3 fw-bold ">{post.user.userName}</span>
-                <small className="m-0  ">{post.user.userAt}</small>
-                <p className="m-0  px-3">
-                  <small>{date.toLocaleString()}</small>
-                </p>
-              </div>
+    <>
+      <div
+        className=" mt-3 p-3 rounded-3 "
+        style={{ backgroundColor: "white " }}>
+        <div className="d-flex justify-content-between align-content-center">
+          <div className="d-flex ">
+            <img
+              src={post.user.avatarUrl}
+              style={{ height: "50px", width: "50px", borderRadius: "100%" }}
+            />
+            <div>
+              <span className="m-0 px-3 fw-bold ">{post.user.userName}</span>
+              <small className="m-0  ">{post.user.userAt}</small>
+              <p className="m-0  px-3">
+                <small>{date.toLocaleString()}</small>
+              </p>
             </div>
-            {user.posts &&
-              user.posts.length > 0 &&
-              user.posts.includes(post._id) && (
-                <span
-                  style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => setIsOptionOpen((prev) => !prev)}>
-                  {isOptionOpen ? (
-                    <RxCross2 style={{ fontSize: "25px" }} />
-                  ) : (
-                    <HiDotsVertical />
-                  )}
-                </span>
-              )}
           </div>
-          <div className="position-relative">
-            {isEdit && (
-              <AddPost
-                setIsPostOpen={setIsEdit}
-                isEdit={isEdit}
-                postId={post._id}
-                userId={user._id}
-                content={post.description}
-              />
-            )}
-
-            {isOptionOpen && (
-              <div
-                className="position-absolute fw-semibold shadow-lg px-3 py-2 rounded-3 z-1"
-                style={{
-                  backgroundColor: "white",
-                  right: "0px",
-                  top: "0px",
-                  cursor: "pointer",
-                }}>
-                <p className="m-0" onClick={editHandler}>
-                  Edit
-                </p>
-                <p className="m-0" onClick={() => deleteHandler(post._id)}>
-                  Delete
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="my-4 px-2">
-            <p>{post.description}</p>
-          </div>
-          <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
-            <p className="m-0">
-              {user.likedPosts.includes(post._id) ? (
-                <span onClick={() => dislikeHandler(post._id)}>
-                  <FaHeart />
-                </span>
+          {user && user?.posts && user?.posts.includes(post._id) && (
+            <span
+              style={{ fontSize: "20px", cursor: "pointer" }}
+              onClick={() => setIsOptionOpen((prev) => !prev)}>
+              {isOptionOpen ? (
+                <RxCross2 style={{ fontSize: "25px" }} />
               ) : (
-                <span onClick={() => likeHandler(post._id)}>
-                  <FaRegHeart />
-                </span>
+                <HiDotsVertical />
               )}
-              <span className=" px-1 ">{post.likesCount}</span>
-            </p>
-            <p className="m-0">
-              <span>
-                <FaRegComment />
-              </span>
-            </p>
-            {user.bookmarks.includes(post._id) ? (
-              <span onClick={() => removeFromBookmarkHandler(post._id)}>
-                <FaBookmark />
+            </span>
+          )}
+        </div>
+        <div className="position-relative">
+          {isEdit && (
+            <AddPost
+              setIsPostOpen={setIsEdit}
+              isEdit={isEdit}
+              postId={post._id}
+              userId={user._id}
+              content={post.description}
+            />
+          )}
+
+          {isOptionOpen && (
+            <div
+              className="position-absolute fw-semibold shadow-lg px-3 py-2 rounded-3 z-1"
+              style={{
+                backgroundColor: "white",
+                right: "0px",
+                top: "0px",
+                cursor: "pointer",
+              }}>
+              <p className="m-0" onClick={editHandler}>
+                Edit
+              </p>
+              <p className="m-0" onClick={() => deleteHandler(post._id)}>
+                Delete
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="my-4 px-2">
+          <p>{post.description}</p>
+        </div>
+        <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
+          <p className="m-0">
+            {user && user?.likedPosts && user?.likedPosts.includes(post._id) ? (
+              <span onClick={() => dislikeHandler(post._id)}>
+                <FaHeart />
               </span>
             ) : (
-              <span onClick={() => addToBookmarkHandler(post._id)}>
-                <FaRegBookmark />
+              <span onClick={() => likeHandler(post._id)}>
+                <FaRegHeart />
               </span>
             )}
+            <span className=" px-1 ">{post.likesCount}</span>
+          </p>
+          <p className="m-0">
             <span>
-              <IoMdShare />
+              <FaRegComment />
             </span>
-          </div>
+          </p>
+          {user && user?.bookmarks && user?.bookmarks.includes(post._id) ? (
+            <span onClick={() => removeFromBookmarkHandler(post._id)}>
+              <FaBookmark />
+            </span>
+          ) : (
+            <span onClick={() => addToBookmarkHandler(post._id)}>
+              <FaRegBookmark />
+            </span>
+          )}
+          <span>
+            <IoMdShare />
+          </span>
         </div>
-        <Toaster />
-      </>
-    )
+      </div>
+      <Toaster />
+    </>
   );
 };
 

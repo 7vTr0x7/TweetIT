@@ -12,8 +12,6 @@ export const readPosts = createAsyncThunk("readPosts", async (id) => {
       }
 
       const data = await res.json();
-      console.log("readpost", data);
-
       return data;
     }
   } catch (error) {
@@ -42,7 +40,6 @@ export const editPost = createAsyncThunk(
         }
 
         const data = await res.json();
-        console.log("editpost", data);
         return data;
       }
     } catch (error) {
