@@ -5,10 +5,13 @@ import Post from "../../components/Post";
 import FollowSection from "../../components/FollowSection";
 import { useDispatch, useSelector } from "react-redux";
 import { readUser } from "../Profile/userSlice";
+import { useFetchBookmark } from "../../hooks/useFetchBookmark";
 
 const Bookmark = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+
+  const bookmarkPosts = useFetchBookmark();
 
   useEffect(() => {
     dispatch(readUser());
@@ -24,8 +27,8 @@ const Bookmark = () => {
           </div>
           <div className="col-md-6 mb-5">
             <h4 className="text-center my-3 text-secondary">Explore</h4>
-            {posts &&
-              posts.map((post) => (
+            {bookmarkPosts &&
+              bookmarkPosts.map((post) => (
                 <div key={post._id}>
                   <Post post={post} user={user} />
                 </div>
