@@ -101,7 +101,7 @@ const Post = ({ post, user }) => {
           <span
             style={{ fontSize: "20px", cursor: "pointer" }}
             onClick={() => setIsOptionOpen((prev) => !prev)}>
-            {isOptionOpen ? (
+            {user.posts.includes(post._id) && isOptionOpen ? (
               <RxCross2 style={{ fontSize: "25px" }} />
             ) : (
               <HiDotsVertical />
