@@ -11,6 +11,8 @@ export const readUser = createAsyncThunk("readUser", async () => {
     }
 
     const data = await res.json();
+    console.log("user", data);
+
     return data;
   } catch (error) {
     console.log(error);
