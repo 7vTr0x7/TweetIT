@@ -16,10 +16,10 @@ const FollowSection = () => {
           />
         </div>
 
-        <div className="card my-3 ">
-          <p className="card-header fw-semibold text-center">
-            <span>Who to follow?</span>
-          </p>
+        <p className="fw-semibold text-center mb-0 mt-3">
+          <span>Who to follow?</span>
+        </p>
+        <div className="card mt-1 mb-3 ">
           <div className="card-body"></div>
         </div>
       </div>
