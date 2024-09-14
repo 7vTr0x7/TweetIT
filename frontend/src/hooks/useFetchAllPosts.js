@@ -10,7 +10,7 @@ export const useFetchAllPosts = () => {
         console.log("Failed to fetch posts");
       }
 
-      const data = res.json();
+      const data = await res.json();
       setAllPosts(data);
     } catch (error) {
       console.log(error);
