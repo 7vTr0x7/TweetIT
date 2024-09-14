@@ -11,8 +11,7 @@ const Bookmark = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
-  const bookmarkPosts = useFetchBookmark();
-
+  const bookmarkPosts = useFetchBookmark(user._id);
   useEffect(() => {
     dispatch(readUser());
   }, []);
@@ -26,7 +25,8 @@ const Bookmark = () => {
             <Nav />
           </div>
           <div className="col-md-6 mb-5">
-            <h4 className="text-center my-3 text-secondary">Explore</h4>
+            <h4 className="text-center my-3 text-secondary">Bookmarks</h4>
+
             {bookmarkPosts &&
               bookmarkPosts.map((post) => (
                 <div key={post._id}>

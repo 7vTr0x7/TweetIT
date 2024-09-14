@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-export const useFetchBookmark = () => {
+export const useFetchBookmark = (id) => {
   const [bookmark, setBookmark] = useState([]);
 
-  const fetchBookmark = async (id) => {
+  const fetchBookmark = async () => {
     try {
       if (id) {
         const res = await fetch(
@@ -25,8 +25,8 @@ export const useFetchBookmark = () => {
   };
 
   useEffect(() => {
-    fetchBookmark();
-  }, []);
+    fetchBookmark(id);
+  }, [id]);
 
   return bookmark;
 };
