@@ -13,8 +13,7 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
   const dispatch = useDispatch();
 
   const editHandler = () => {
-    console.log(postId);
-    dispatch(editPost(postId, description)).then(() => {
+    dispatch(editPost({ postId, description })).then(() => {
       dispatch(readUser()).then(() => {
         dispatch(readPosts(userId)).then(() => {
           toast.success("Post Edited");

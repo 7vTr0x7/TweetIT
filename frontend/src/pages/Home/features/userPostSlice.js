@@ -24,7 +24,6 @@ export const editPost = createAsyncThunk(
   async ({ postId, description }) => {
     try {
       if (postId) {
-        console.log({ description: description });
         const res = await fetch(
           `http://localhost:4000/api/posts/edit/${postId}`,
           {
