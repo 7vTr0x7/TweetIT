@@ -6,6 +6,7 @@ import { readUser } from "../pages/Profile/userSlice";
 import { editPost, readPosts } from "../pages/Home/features/userPostSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { fetchAllPosts } from "../pages/Explore/postsSlice";
 
 const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
   const [description, setDescription] = useState(content);
@@ -13,19 +14,15 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
   const dispatch = useDispatch();
 
   const editHandler = async () => {
-    dispatch(editPost({ postId, description })).then((editRes) => {
-      if (editRes) {
-        dispatch(readPosts(userId)).then((readRes) => {
-          if (readRes) {
-            dispatch(readUser()).then((userRes) => {
-              if (userRes) {
-                toast.success("Post Edited");
-                setIsPostOpen(false);
-              }
-            });
-          }
+    dispatch(editPost({ postId, description })).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(fetchAllPosts()).then(() => {
+          dispatch(readPosts(userId)).then(() => {
+            toast.success("Post Edited");
+            setIsPostOpen(false);
+          });
         });
-      }
+      });
     });
   };
 

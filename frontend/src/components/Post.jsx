@@ -18,6 +18,7 @@ import { deletePost, readPosts } from "../pages/Home/features/userPostSlice";
 import { addToBookmark } from "../utils/functions/addToBookmark";
 import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
 import AddPost from "./AddPost";
+import { fetchAllPosts } from "../pages/Explore/postsSlice";
 
 const Post = ({ post, user }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -28,33 +29,35 @@ const Post = ({ post, user }) => {
   const dispatch = useDispatch();
 
   const likeHandler = async (id) => {
-    likeAPost(id, user._id).then((likeRes) => {
-      likeRes &&
-        dispatch(readUser()).then((userRes) => {
-          userRes &&
-            dispatch(readPosts(user._id)).then((postRes) => {
-              postRes && toast.success("Like Added");
-            });
+    likeAPost(id, user._id).then(() => {
+      dispatch(fetchAllPosts()).then(() => {
+        dispatch(readUser()).then(() => {
+          dispatch(readPosts(user._id)).then(() => {
+            toast.success("Like Added");
+          });
         });
+      });
     });
   };
   const dislikeHandler = async (id) => {
-    dislikeAPost(id, user._id).then((dislikeRes) => {
-      dislikeRes &&
-        dispatch(readUser()).then((userRes) => {
-          userRes &&
-            dispatch(readPosts(user._id)).then((postRes) => {
-              postRes && toast.success("Like Removed");
-            });
+    dislikeAPost(id, user._id).then(() => {
+      dispatch(fetchAllPosts()).then(() => {
+        dispatch(readUser()).then(() => {
+          dispatch(readPosts(user._id)).then(() => {
+            toast.success("Like Removed");
+          });
         });
+      });
     });
   };
 
   const addToBookmarkHandler = (id) => {
     addToBookmark(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Added to Bookmark");
+        dispatch(fetchAllPosts()).then(() => {
+          dispatch(readPosts(user._id)).then(() => {
+            toast.success("Added to Bookmark");
+          });
         });
       });
     });
@@ -62,8 +65,10 @@ const Post = ({ post, user }) => {
   const removeFromBookmarkHandler = (id) => {
     removeFromBookmark(id, user._id).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Removed From Bookmark");
+        dispatch(fetchAllPosts()).then(() => {
+          dispatch(readPosts(user._id)).then(() => {
+            toast.success("Removed from Bookmark");
+          });
         });
       });
     });
@@ -77,8 +82,10 @@ const Post = ({ post, user }) => {
   const deleteHandler = (postId) => {
     dispatch(deletePost({ userId: user._id, postId })).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Post Deleted");
+        dispatch(fetchAllPosts()).then(() => {
+          dispatch(readPosts(user._id)).then(() => {
+            toast.success("Post deleted");
+          });
         });
       });
     });

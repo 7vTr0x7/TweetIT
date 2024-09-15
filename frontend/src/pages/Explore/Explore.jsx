@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
-import Nav from "../../components/Nav";
-import Header from "../../components/Header";
-import FollowSection from "../../components/FollowSection";
-import { useFetchAllPosts } from "../../hooks/useFetchAllPosts";
-import Post from "../../components/Post";
 import { useDispatch, useSelector } from "react-redux";
+import FollowSection from "../../components/FollowSection";
+import Header from "../../components/Header";
+import Nav from "../../components/Nav";
+import Post from "../../components/Post";
 import { readUser } from "../Profile/userSlice";
+import { fetchAllPosts } from "./postsSlice";
 
 const Explore = () => {
-  const posts = useFetchAllPosts();
-
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const posts = useSelector((state) => state.allPosts.posts);
 
   useEffect(() => {
     dispatch(readUser());
+    dispatch(fetchAllPosts());
   }, []);
 
   return (
