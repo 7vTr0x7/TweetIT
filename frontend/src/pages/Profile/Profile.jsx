@@ -10,6 +10,7 @@ import { fetchAllPosts } from "../Explore/postsSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetUser } from "../../hooks/useGetUser";
 import { useGetPosts } from "../../hooks/useGetPosts";
+import Post from "./../../components/Post";
 
 const avatars = [
   "https://i.pravatar.cc/300?img=7",
@@ -225,6 +226,17 @@ const Profile = () => {
                 )}
               </div>
             )}
+            <div className="my-3">
+              {postsData.length === 0 && (
+                <p className="fw-semibold text-center">Loading...</p>
+              )}
+              {postsData &&
+                postsData.map((post) => (
+                  <div key={post._id}>
+                    <Post post={post} user={userData} />
+                  </div>
+                ))}
+            </div>
           </div>
           <div className="col-md-3">
             <FollowSection />
