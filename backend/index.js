@@ -18,7 +18,7 @@ initializeDatabase();
 
 const getPosts = async () => {
   try {
-    const posts = await SocialPosts.find().populate("user");
+    const posts = await SocialPosts.find();
     return posts;
   } catch (error) {
     console.log(error);
@@ -41,11 +41,17 @@ app.get("/api/posts", async (req, res) => {
 
 const addPost = async (userId, post) => {
   try {
+    const user = await SocialUser.findById(userId);
+    const { avatarUrl, userName, userAt } = user;
+
     const newPost = new SocialPosts({
       ...post,
-      user: userId,
+      user: { avatarUrl, userName, userAt },
     });
     const savedPost = await newPost.save();
+
+    user.posts.push(savedPost._id);
+    user.save();
 
     return savedPost;
   } catch (error) {

@@ -193,6 +193,7 @@ const Profile = () => {
                 <p className="fw-semibold text-center">Loading...</p>
               )}
               {posts &&
+                posts.length > 0 &&
                 posts.map((post) => (
                   <div key={post._id}>
                     <Post post={post} user={user} />
