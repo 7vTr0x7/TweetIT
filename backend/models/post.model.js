@@ -3,18 +3,8 @@ const mongoose = require("mongoose");
 const SocialPostSchema = new mongoose.Schema(
   {
     user: {
-      avatarUrl: {
-        type: String,
-        required: true,
-      },
-      userName: {
-        type: String,
-        required: true,
-      },
-      userAt: {
-        type: String,
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SocialUser",
     },
     description: {
       type: String,

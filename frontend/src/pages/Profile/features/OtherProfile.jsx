@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import FollowSection from "../../components/FollowSection";
-import Header from "../../components/Header";
-import Nav from "../../components/Nav";
-import { readPosts } from "../Home/features/userPostSlice";
-import Post from "./../../components/Post";
-import { editUser, readUser } from "./userSlice";
+import { editUser, readUser } from "../userSlice";
+import { readPosts } from "../../Home/features/userPostSlice";
+import Header from "../../../components/Header";
+import Nav from "../../../components/Nav";
 
 const avatars = [
   "https://i.pravatar.cc/300?img=7",
@@ -16,34 +14,48 @@ const avatars = [
   "https://i.pravatar.cc/300?img=10",
 ];
 
-const Profile = () => {
-  const [user, setUser] = useState({});
+const OtherProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
 
   const dispatch = useDispatch();
 
-  let userData = useSelector((state) => state.user.user);
+  let user = useSelector((state) => state.user.user);
 
   let posts = useSelector((state) => state.posts.posts);
 
   useEffect(() => {
-    dispatch(readUser()).then(() => {
-      setUser(userData || {});
-    });
-    dispatch(readPosts(userData._id));
-  }, [dispatch, userData._id]);
+    dispatch(readUser()).then(() => dispatch(readPosts(user._id)));
+  }, [dispatch, user]);
 
   const editHandler = async () => {
     dispatch(editUser({ userData: user })).then(() => {
       dispatch(readUser()).then(() => {
-        dispatch(readPosts(user._id)).then(() => {
-          toast.success("Profile Updated");
-          setIsEdit(false);
-        });
+        toast.success("Profile Updated");
+        setIsEdit(false);
       });
     });
   };
+
+  // const followHandler = async () => {
+  //   const followed = await follow({ followUserId: userId, userId: user._id });
+  //   if (followed) {
+  //     dispatch(readUser()).then(() => {
+  //       toast.success("Following");
+  //     });
+  //   }
+  // };
+  // const unFollowHandler = async () => {
+  //   const unFollowed = await unFollow({
+  //     followUserId: userId,
+  //     userId: user._id,
+  //   });
+  //   if (unFollowed) {
+  //     dispatch(readUser()).then(() => {
+  //       toast.success("unFollowed");
+  //     });
+  //   }
+  // };
 
   return (
     <>
@@ -94,11 +106,29 @@ const Profile = () => {
                     </div>
                   </div>
 
-                  <button
-                    className="btn btn-light h-25 fw-semibold"
-                    onClick={() => setIsEdit((prev) => !prev)}>
-                    Edit
-                  </button>
+                  {/* "      {userId ? (
+                    <>
+                      {user && user?.following?.includes(userId) ? (
+                        <button
+                          className="btn btn-light h-25 fw-semibold"
+                          onClick={unFollowHandler}>
+                          Unfollow
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-light h-25 fw-semibold"
+                          onClick={followHandler}>
+                          Follow
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <button
+                      className="btn btn-light h-25 fw-semibold"
+                      onClick={() => setIsEdit((prev) => !prev)}>
+                      Edit
+                    </button>
+                  )}" */}
                 </div>
                 {isEdit && (
                   <div className="d-flex justify-content-center">
@@ -128,7 +158,7 @@ const Profile = () => {
                                 className="p-1"
                                 key={img}
                                 onClick={() =>
-                                  setUser((prev) => ({
+                                  setuser((prev) => ({
                                     ...prev,
                                     avatarUrl: img,
                                   }))
@@ -152,7 +182,7 @@ const Profile = () => {
                           className="form-control fw-semibold"
                           value={user.userName}
                           onChange={(e) =>
-                            setUser((prev) => ({
+                            setuser((prev) => ({
                               ...prev,
                               userName: e.target.value,
                             }))
@@ -164,7 +194,7 @@ const Profile = () => {
                           className="form-control fw-semibold"
                           value={user.bio}
                           onChange={(e) =>
-                            setUser((prev) => ({
+                            setuser((prev) => ({
                               ...prev,
                               bio: e.target.value,
                             }))
@@ -189,7 +219,7 @@ const Profile = () => {
               </div>
             )}
             <div className="my-3">
-              {posts?.length === 0 && (
+              {posts.length === 0 && (
                 <p className="fw-semibold text-center">Loading...</p>
               )}
               {posts &&
@@ -210,4 +240,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default OtherProfile;
