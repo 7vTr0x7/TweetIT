@@ -5,17 +5,33 @@ import FollowSection from "../../components/FollowSection";
 import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { readUser } from "./userSlice";
-import { readPosts } from "../Home/features/userPostSlice";
+import { editPost, readPosts } from "../Home/features/userPostSlice";
+import { fetchAllPosts } from "../Explore/postsSlice";
+import toast from "react-hot-toast";
+
+const avatars = [
+  "https://i.pravatar.cc/300?img=7",
+  "https://i.pravatar.cc/300?img=8",
+  "https://i.pravatar.cc/300?img=9",
+  "https://i.pravatar.cc/300?img=10",
+  "https://i.pravatar.cc/300?img=11",
+];
 
 const Profile = () => {
   const [userData, setUserData] = useState({});
   const [userPosts, setUserPosts] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [bio, setBio] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const userParam = useParams();
   const { userId } = userParam;
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.user);
+
   const posts = useSelector((state) => state.posts.posts);
 
   const fetchData = async () => {
@@ -31,6 +47,9 @@ const Profile = () => {
 
         const userData = await userRes.json();
         setUserData(userData);
+        setUserName(userData.userName);
+        setBio(userData.bio);
+        setAvatar(userData.avatarUrl);
 
         const postRes = await fetch(
           `https://tweet-it-backend.vercel.app/api/users/user/posts/${userId}`
@@ -44,6 +63,10 @@ const Profile = () => {
         setUserPosts(postData);
       } else {
         setUserData(user);
+        setUserName(user.userName);
+        setBio(user.bio);
+        setAvatar(user.avatarUrl);
+
         setUserPosts(posts);
       }
     } catch (error) {
@@ -61,7 +84,14 @@ const Profile = () => {
     fetchData();
   }, []);
 
-  const editHandler = () => {};
+  const editHandler = async (postId) => {
+    dispatch(editPost({ postId, data: { avatarUrl: avatar } })).then(() => {
+      dispatch(readUser()).then(() => {
+        toast.success("Profile Updated");
+        setIsEdit(false);
+      });
+    });
+  };
 
   return (
     <>
@@ -124,11 +154,82 @@ const Profile = () => {
                 ) : (
                   <button
                     className="btn btn-light h-25 fw-semibold"
-                    onClick={editHandler}>
+                    onClick={() => setIsEdit((prev) => !prev)}>
                     Edit
                   </button>
                 )}
               </div>
+              {isEdit && (
+                <div className="d-flex justify-content-center">
+                  <div
+                    className="position-absolute  p-3 shadow-lg rounded-3 "
+                    style={{
+                      width: "300px",
+                      backgroundColor: "white",
+                      top: "0px",
+                    }}>
+                    <div onClick={() => setIsAvatarOpen((prev) => !prev)}>
+                      <img
+                        src={avatar}
+                        alt={userData.userName}
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          borderRadius: "100%",
+                        }}
+                      />
+                      {isAvatarOpen && (
+                        <div
+                          className="p-2 my-2 shadow-lg d-flex flex-wrap rounded-3"
+                          style={{ backgroundColor: "white" }}>
+                          {avatars.map((img) => (
+                            <div
+                              className="p-1"
+                              key={img}
+                              onClick={() => setAvatar(img)}>
+                              <img
+                                style={{
+                                  height: "40px",
+                                  width: "40px",
+                                  borderRadius: "100%",
+                                }}
+                                src={img}
+                                alt="avatar"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-3">
+                      <input
+                        className="form-control fw-semibold"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <textarea
+                        className="form-control fw-semibold"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        rows={3}></textarea>
+                    </div>
+                    <div className="mb-2 mt-3 d-flex justify-content-between ">
+                      <button
+                        className="btn btn-light fw-semibold"
+                        onClick={editHandler}>
+                        Update
+                      </button>
+                      <button
+                        className="btn btn-light fw-semibold"
+                        onClick={() => setIsEdit(false)}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="col-md-3">

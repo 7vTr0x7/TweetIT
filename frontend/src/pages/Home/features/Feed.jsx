@@ -76,7 +76,7 @@ const Feed = () => {
             </div>
           )}
         </div>
-        {filteredPosts.length === 0 && (
+        {filteredPosts && filteredPosts.length === 0 && (
           <p className="text-center fw-semibold my-3 text-secondary">
             Loading...
           </p>

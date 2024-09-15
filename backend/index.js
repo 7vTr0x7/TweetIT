@@ -461,6 +461,31 @@ app.get("/api/users/user/id/:userId", async (req, res) => {
   }
 });
 
+const editUser = async (userId, data) => {
+  try {
+    const user = await SocialUser.findByIdAndUpdate(userId, data, {
+      new: true,
+    });
+    return user;
+  } catch (error) {
+    console.log(user);
+  }
+};
+
+app.post("/api/users/user/edit/:userId", async (req, res) => {
+  try {
+    const user = await editUser(req.params.userId, req.body);
+
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ error: `user not found` });
+    }
+  } catch (error) {
+    res.status(500).json({ error: `Failed to update user error: ${error}` });
+  }
+});
+
 const PORT = 4000;
 
 app.listen(PORT, () => {
