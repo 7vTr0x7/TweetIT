@@ -17,6 +17,29 @@ export const readUser = createAsyncThunk("readUser", async () => {
     console.log(error);
   }
 });
+export const editUser = createAsyncThunk("editUser", async ({ userData }) => {
+  try {
+    const res = await fetch(
+      "https://tweet-it-backend.vercel.app/api/users/user/edit/66e183147b64fafc1e2fa38a",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
+
+    if (!res.ok) {
+      console.log("Failed to get user");
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -36,6 +59,15 @@ const userSlice = createSlice({
       state.user = action.payload;
     });
     builder.addCase(readUser.rejected, (state, action) => {
+      state.status = "Failed";
+    });
+    builder.addCase(editUser.pending, (state, action) => {
+      state.status = "pending";
+    });
+    builder.addCase(editUser.fulfilled, (state, action) => {
+      state.status = "Success";
+    });
+    builder.addCase(editUser.rejected, (state, action) => {
       state.status = "Failed";
     });
   },
