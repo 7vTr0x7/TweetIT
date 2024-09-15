@@ -11,6 +11,7 @@ import { follow } from "../../utils/functions/follow";
 import { readPosts } from "../Home/features/userPostSlice";
 import Post from "./../../components/Post";
 import { editUser, readUser } from "./userSlice";
+import { unFollow } from "../../utils/functions/unfollow";
 
 const avatars = [
   "https://i.pravatar.cc/300?img=7",
@@ -72,6 +73,17 @@ const Profile = () => {
       });
     }
   };
+  const unFollowHandler = async () => {
+    const unFollowed = await unFollow({
+      followUserId: userId,
+      userId: user._id,
+    });
+    if (unFollowed) {
+      dispatch(readUser()).then(() => {
+        toast.success("unFollowed");
+      });
+    }
+  };
 
   return (
     <>
@@ -127,7 +139,9 @@ const Profile = () => {
                   {userId ? (
                     <>
                       {user && user?.following?.includes(userId) ? (
-                        <button className="btn btn-light h-25 fw-semibold">
+                        <button
+                          className="btn btn-light h-25 fw-semibold"
+                          onClick={unFollowHandler}>
                           Unfollow
                         </button>
                       ) : (

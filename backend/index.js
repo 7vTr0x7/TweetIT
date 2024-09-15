@@ -403,7 +403,7 @@ const unFollowUser = async (userId, followUserId) => {
 
 app.post("/api/users/unfollow/:followUserId", async (req, res) => {
   try {
-    const user = await unFollowUser(req.body, req.params.followUserId);
+    const user = await unFollowUser(req.body.userId, req.params.followUserId);
 
     if (user && user.length > 0) {
       res.json(user);
