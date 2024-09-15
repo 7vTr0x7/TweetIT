@@ -47,9 +47,6 @@ const addPost = async (userId, post) => {
     });
     const savedPost = await newPost.save();
 
-    user.posts.push(savedPost._id);
-    user.save();
-
     return savedPost;
   } catch (error) {
     console.log(error);
