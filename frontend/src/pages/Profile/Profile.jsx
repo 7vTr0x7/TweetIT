@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Nav from "../../components/Nav";
-import Header from "../../components/Header";
-import FollowSection from "../../components/FollowSection";
-import { useLocation, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { editUser, readUser } from "./userSlice";
-import { editPost, readPosts } from "../Home/features/userPostSlice";
-import { fetchAllPosts } from "../Explore/postsSlice";
 import toast, { Toaster } from "react-hot-toast";
-import { useGetUser } from "../../hooks/useGetUser";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import FollowSection from "../../components/FollowSection";
+import Header from "../../components/Header";
+import Nav from "../../components/Nav";
 import { useGetPosts } from "../../hooks/useGetPosts";
+import { useGetUser } from "../../hooks/useGetUser";
+import { follow } from "../../utils/functions/follow";
+import { readPosts } from "../Home/features/userPostSlice";
 import Post from "./../../components/Post";
+import { editUser, readUser } from "./userSlice";
 
 const avatars = [
   "https://i.pravatar.cc/300?img=7",
@@ -25,9 +25,6 @@ const Profile = () => {
   const [postsData, setPostsData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [bio, setBio] = useState("");
-  const [avatar, setAvatar] = useState("");
 
   const userParam = useParams();
   const { userId } = userParam || {};
@@ -67,7 +64,14 @@ const Profile = () => {
     });
   };
 
-  const followHandler = () => {};
+  const followHandler = async () => {
+    const followed = await follow({ followUserId: userId, userId: user._id });
+    if (followed) {
+      dispatch(readUser()).then(() => {
+        toast.success("Following");
+      });
+    }
+  };
 
   return (
     <>
@@ -129,7 +133,7 @@ const Profile = () => {
                       ) : (
                         <button
                           className="btn btn-light h-25 fw-semibold"
-                          onClick={() => followHandler}>
+                          onClick={followHandler}>
                           Follow
                         </button>
                       )}

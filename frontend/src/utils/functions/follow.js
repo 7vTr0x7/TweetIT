@@ -1,7 +1,7 @@
-export const follow = async (userId) => {
+export const follow = async ({ followUserId, userId }) => {
   try {
     const res = await fetch(
-      `https://tweet-it-backend.vercel.app/api/users/follow/${id}`,
+      `https://tweet-it-backend.vercel.app/api/users/follow/${followUserId}`,
       {
         method: "POST",
         headers: {
@@ -16,6 +16,7 @@ export const follow = async (userId) => {
     }
 
     const data = await res.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error);
