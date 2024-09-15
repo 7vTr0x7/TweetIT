@@ -4,11 +4,13 @@ import { FiSearch } from "react-icons/fi";
 import { useFetchUsers } from "../hooks/useFetchUsers";
 import { useDispatch, useSelector } from "react-redux";
 import { readUser } from "../pages/Profile/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const FollowSection = () => {
   const users = useFetchUsers();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const mainUser = useSelector((state) => state.user.user);
 
@@ -44,6 +46,7 @@ const FollowSection = () => {
             {filteredUsers &&
               filteredUsers.map((user) => (
                 <div
+                  onClick={() => navigate(`/user-profile/${user._id}`)}
                   key={user._id}
                   className="d-flex justify-content-between my-3 align-content-center">
                   <img

@@ -67,6 +67,8 @@ const Profile = () => {
     });
   };
 
+  const followHandler = () => {};
+
   return (
     <>
       <Header />
@@ -120,12 +122,14 @@ const Profile = () => {
 
                   {userId ? (
                     <>
-                      {userData.following.includes(userId) ? (
+                      {user && user?.following?.includes(userId) ? (
                         <button className="btn btn-light h-25 fw-semibold">
                           Unfollow
                         </button>
                       ) : (
-                        <button className="btn btn-light h-25 fw-semibold">
+                        <button
+                          className="btn btn-light h-25 fw-semibold"
+                          onClick={() => followHandler}>
                           Follow
                         </button>
                       )}
@@ -233,7 +237,7 @@ const Profile = () => {
               {postsData &&
                 postsData.map((post) => (
                   <div key={post._id}>
-                    <Post post={post} user={userData} />
+                    <Post post={post} user={user} />
                   </div>
                 ))}
             </div>

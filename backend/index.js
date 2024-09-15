@@ -369,7 +369,7 @@ const followUser = async (userId, followUserId) => {
 
 app.post("/api/users/follow/:followUserId", async (req, res) => {
   try {
-    const user = await followUser(req.body, req.params.followUserId);
+    const user = await followUser(req.body.userId, req.params.followUserId);
 
     if (user && user.length > 0) {
       res.json(user);
