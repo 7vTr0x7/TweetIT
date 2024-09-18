@@ -25,6 +25,7 @@ const Post = ({ post, user }) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const date = new Date(post.createdAt);
+  console.log(post);
 
   const dispatch = useDispatch();
 
@@ -99,7 +100,7 @@ const Post = ({ post, user }) => {
         <div className="d-flex justify-content-between align-content-center">
           <div className="d-flex ">
             <img
-              src={post.user.avatarUrl}
+              src={post?.user?.avatarUrl}
               style={{ height: "50px", width: "50px", borderRadius: "100%" }}
             />
             <div>

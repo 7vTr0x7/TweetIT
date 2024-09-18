@@ -1,61 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { editUser, readUser } from "../userSlice";
-import { readPosts } from "../../Home/features/userPostSlice";
+import { useLocation } from "react-router-dom";
 import Header from "../../../components/Header";
 import Nav from "../../../components/Nav";
-
-const avatars = [
-  "https://i.pravatar.cc/300?img=7",
-  "https://i.pravatar.cc/300?img=6",
-  "https://i.pravatar.cc/300?img=8",
-  "https://i.pravatar.cc/300?img=9",
-  "https://i.pravatar.cc/300?img=10",
-];
+import { useGetUser } from "../../../hooks/useGetUser";
+import Post from "./../../../components/Post";
+import FollowSection from "../../../components/FollowSection";
+import { useDispatch, useSelector } from "react-redux";
+import { readUser } from "../userSlice";
+import { unFollow } from "./../../../utils/functions/unfollow";
+import { follow } from "./../../../utils/functions/follow";
+import { useGetPosts } from "./../../../hooks/useGetPosts";
 
 const OtherProfile = () => {
-  const [isEdit, setIsEdit] = useState(false);
-  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const location = useLocation();
+  const { user } = location.state || {};
 
   const dispatch = useDispatch();
 
-  let user = useSelector((state) => state.user.user);
+  const mainUser = useSelector((state) => state.user.user);
+  const userId = mainUser._id;
 
-  let posts = useSelector((state) => state.posts.posts);
+  const posts = useGetPosts(user._id);
 
-  useEffect(() => {
-    dispatch(readUser()).then(() => dispatch(readPosts(user._id)));
-  }, [dispatch, user]);
-
-  const editHandler = async () => {
-    dispatch(editUser({ userData: user })).then(() => {
+  const followHandler = async () => {
+    const followed = await follow({ followUserId: user._id, userId });
+    if (followed) {
       dispatch(readUser()).then(() => {
-        toast.success("Profile Updated");
-        setIsEdit(false);
+        toast.success("Following");
       });
-    });
+    }
   };
-
-  // const followHandler = async () => {
-  //   const followed = await follow({ followUserId: userId, userId: user._id });
-  //   if (followed) {
-  //     dispatch(readUser()).then(() => {
-  //       toast.success("Following");
-  //     });
-  //   }
-  // };
-  // const unFollowHandler = async () => {
-  //   const unFollowed = await unFollow({
-  //     followUserId: userId,
-  //     userId: user._id,
-  //   });
-  //   if (unFollowed) {
-  //     dispatch(readUser()).then(() => {
-  //       toast.success("unFollowed");
-  //     });
-  //   }
-  // };
+  const unFollowHandler = async () => {
+    const unFollowed = await unFollow({
+      followUserId: user._id,
+      userId,
+    });
+    if (unFollowed) {
+      dispatch(readUser()).then(() => {
+        toast.success("unFollowed");
+      });
+    }
+  };
 
   return (
     <>
@@ -83,6 +69,7 @@ const OtherProfile = () => {
                         borderRadius: "100%",
                       }}
                     />
+
                     <div>
                       <p className="fs-5 fw-bold px-3 m-0">{user.userName}</p>
                       <p className="fs-6 px-3 m-0">{user.userAt}</p>
@@ -104,118 +91,26 @@ const OtherProfile = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
 
-                  {/* "      {userId ? (
-                    <>
-                      {user && user?.following?.includes(userId) ? (
-                        <button
-                          className="btn btn-light h-25 fw-semibold"
-                          onClick={unFollowHandler}>
-                          Unfollow
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-light h-25 fw-semibold"
-                          onClick={followHandler}>
-                          Follow
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <button
-                      className="btn btn-light h-25 fw-semibold"
-                      onClick={() => setIsEdit((prev) => !prev)}>
-                      Edit
-                    </button>
-                  )}" */}
-                </div>
-                {isEdit && (
-                  <div className="d-flex justify-content-center">
-                    <div
-                      className="position-absolute  p-3 shadow-lg rounded-3 "
-                      style={{
-                        width: "300px",
-                        backgroundColor: "white",
-                        top: "0px",
-                      }}>
-                      <div onClick={() => setIsAvatarOpen((prev) => !prev)}>
-                        <img
-                          src={user.avatarUrl}
-                          alt={user.userName}
-                          style={{
-                            height: "40px",
-                            width: "40px",
-                            borderRadius: "100%",
-                          }}
-                        />
-                        {isAvatarOpen && (
-                          <div
-                            className="p-2 my-2 shadow-lg d-flex flex-wrap rounded-3"
-                            style={{ backgroundColor: "white" }}>
-                            {avatars.map((img) => (
-                              <div
-                                className="p-1"
-                                key={img}
-                                onClick={() =>
-                                  setuser((prev) => ({
-                                    ...prev,
-                                    avatarUrl: img,
-                                  }))
-                                }>
-                                <img
-                                  style={{
-                                    height: "40px",
-                                    width: "40px",
-                                    borderRadius: "100%",
-                                  }}
-                                  src={img}
-                                  alt="avatar"
-                                />
-                              </div>
-                            ))}
-                          </div>
+                    {userId && (
+                      <>
+                        {user && user?.following?.includes(userId) ? (
+                          <button
+                            className="btn btn-light h-25 fw-semibold"
+                            onClick={unFollowHandler}>
+                            Unfollow
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-light h-25 fw-semibold"
+                            onClick={followHandler}>
+                            Follow
+                          </button>
                         )}
-                      </div>
-                      <div className="mt-3">
-                        <input
-                          className="form-control fw-semibold"
-                          value={user.userName}
-                          onChange={(e) =>
-                            setuser((prev) => ({
-                              ...prev,
-                              userName: e.target.value,
-                            }))
-                          }
-                        />
-                      </div>
-                      <div className="mt-3">
-                        <textarea
-                          className="form-control fw-semibold"
-                          value={user.bio}
-                          onChange={(e) =>
-                            setuser((prev) => ({
-                              ...prev,
-                              bio: e.target.value,
-                            }))
-                          }
-                          rows={3}></textarea>
-                      </div>
-                      <div className="mb-2 mt-3 d-flex justify-content-between ">
-                        <button
-                          className="btn btn-light fw-semibold"
-                          onClick={editHandler}>
-                          Update
-                        </button>
-                        <button
-                          className="btn btn-light fw-semibold"
-                          onClick={() => setIsEdit(false)}>
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             )}
             <div className="my-3">
@@ -223,9 +118,10 @@ const OtherProfile = () => {
                 <p className="fw-semibold text-center">Loading...</p>
               )}
               {posts &&
+                posts.length > 0 &&
                 posts.map((post) => (
                   <div key={post._id}>
-                    <Post post={post} user={user} />
+                    <Post post={post} user={mainUser} />
                   </div>
                 ))}
             </div>
