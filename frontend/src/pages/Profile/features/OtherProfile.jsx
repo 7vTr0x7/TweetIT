@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useParams } from "react-router-dom";
 import Header from "../../../components/Header";
@@ -14,10 +14,15 @@ import { useGetPosts } from "./../../../hooks/useGetPosts";
 import { readUserById } from "../../../utils/functions/readUserById";
 
 const OtherProfile = () => {
+  const [paramId, setParamId] = useState("");
   const searchUserId = useParams();
   const { id } = searchUserId;
 
-  const user = useGetUser(id);
+  useEffect(() => {
+    setParamId(id);
+  }, [id]);
+
+  const user = useGetUser(paramId);
 
   const dispatch = useDispatch();
 
@@ -31,7 +36,9 @@ const OtherProfile = () => {
     const followed = await follow({ followUserId: user._id, userId });
     if (followed) {
       readUserById(user._id).then(() => {
-        toast.success("Following");
+        dispatch(readUser()).then(() => {
+          toast.success("Following");
+        });
       });
     }
   };
@@ -43,7 +50,9 @@ const OtherProfile = () => {
     if (unFollowed) {
       dispatch(readUser()).then(() => {
         readUserById(user._id).then(() => {
-          toast.success("unFollowed");
+          dispatch(readUser()).then(() => {
+            toast.success("unFollowed");
+          });
         });
       });
     }

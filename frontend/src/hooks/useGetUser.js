@@ -19,7 +19,7 @@ export const useGetUser = (userId) => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [userId]);
 
   return user;
 };
