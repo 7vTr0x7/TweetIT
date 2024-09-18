@@ -1,4 +1,4 @@
-export const readUser = async (id) => {
+export const readUserById = async (id) => {
   try {
     const res = await fetch(
       `https://tweet-it-backend.vercel.app/api/users/user/id/${id}`

@@ -1,6 +1,6 @@
 import React from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Header from "../../../components/Header";
 import Nav from "../../../components/Nav";
 import { useGetUser } from "../../../hooks/useGetUser";
@@ -11,14 +11,18 @@ import { readUser } from "../userSlice";
 import { unFollow } from "./../../../utils/functions/unfollow";
 import { follow } from "./../../../utils/functions/follow";
 import { useGetPosts } from "./../../../hooks/useGetPosts";
+import { readUserById } from "../../../utils/functions/readUserById";
 
 const OtherProfile = () => {
-  const location = useLocation();
-  const { user } = location.state || {};
+  const searchUserId = useParams();
+  const { id } = searchUserId;
+
+  const user = useGetUser(id);
 
   const dispatch = useDispatch();
 
   const mainUser = useSelector((state) => state.user.user);
+
   const userId = mainUser._id;
 
   const posts = useGetPosts(user._id);
@@ -26,7 +30,7 @@ const OtherProfile = () => {
   const followHandler = async () => {
     const followed = await follow({ followUserId: user._id, userId });
     if (followed) {
-      dispatch(readUser()).then(() => {
+      readUserById(user._id).then(() => {
         toast.success("Following");
       });
     }
@@ -38,7 +42,9 @@ const OtherProfile = () => {
     });
     if (unFollowed) {
       dispatch(readUser()).then(() => {
-        toast.success("unFollowed");
+        readUserById(user._id).then(() => {
+          toast.success("unFollowed");
+        });
       });
     }
   };
@@ -92,9 +98,9 @@ const OtherProfile = () => {
                       </div>
                     </div>
 
-                    {userId && (
+                    {user && (
                       <>
-                        {user && user?.following?.includes(userId) ? (
+                        {mainUser && mainUser?.following?.includes(user._id) ? (
                           <button
                             className="btn btn-light h-25 fw-semibold"
                             onClick={unFollowHandler}>

@@ -388,13 +388,13 @@ const unFollowUser = async (userId, followUserId) => {
   try {
     const user = await SocialUser.findById(userId);
     user.following = [...user.following].filter(
-      (id) => followUserId.toString() !== id
+      (id) => followUserId.toString() !== id.toString()
     );
     await user.save();
 
     const followUser = await SocialUser.findById(followUserId);
     followUser.followers = [...followUser.following].filter(
-      (id) => userId.toString() !== id
+      (id) => followUserId.toString() !== id.toString()
     );
     await followUser.save();
 
