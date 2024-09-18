@@ -417,9 +417,9 @@ app.post("/api/users/unfollow/:followUserId", async (req, res) => {
 const getUserPosts = async (userId) => {
   try {
     const user = await SocialUser.findById(userId).populate("posts");
-    user.posts.populate("user");
+    const posts = user.posts.map((post) => post.populate("user"));
 
-    return user.posts;
+    return posts;
   } catch (error) {
     console.log(error);
   }
