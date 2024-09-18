@@ -247,7 +247,11 @@ app.post("/api/users/bookmark/:postId/", async (req, res) => {
 const getUserBookmarks = async (userId) => {
   try {
     const user = await SocialUser.findById(userId).populate("bookmarks");
-    return user.bookmarks;
+    const bookmarks = await Promise.all(
+      user.bookmarks.map((post) => post.populate("user"))
+    );
+
+    return bookmarks;
   } catch (error) {
     console.log(error);
   }
