@@ -65,6 +65,23 @@ const userSlice = createSlice({
         user: { ...state.user, likedPosts: posts },
       };
     },
+    removeUserBookmark: (state, action) => {
+      const bookmarks = state.user.bookmarks.filter(
+        (post) => post !== action.payload
+      );
+      console.log(bookmarks);
+      return {
+        ...state,
+        user: { ...state.user, bookmarks: bookmarks },
+      };
+    },
+    addUserBookmark: (state, action) => {
+      const bookmarks = [...state.user.bookmarks, action.payload];
+      return {
+        ...state,
+        user: { ...state.user, bookmarks: bookmarks },
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(readUser.pending, (state, action) => {
@@ -90,5 +107,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { userDisLike, userLike } = userSlice.actions;
+export const { userDisLike, userLike, addUserBookmark, removeUserBookmark } =
+  userSlice.actions;
 export default userSlice.reducer;

@@ -11,7 +11,7 @@ const Bookmark = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
 
-  const bookmarkPosts = useFetchBookmark(user._id);
+  const bookmarkPosts = useFetchBookmark(user._id, user.bookmarks);
   useEffect(() => {
     dispatch(readUser());
   }, []);
@@ -37,7 +37,7 @@ const Bookmark = () => {
               </p>
             )}
 
-            {bookmarkPosts &&
+            {bookmarkPosts?.length > 0 &&
               bookmarkPosts.map((post) => (
                 <div key={post._id}>
                   <Post post={post} user={user} />

@@ -12,7 +12,13 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa6";
 import { likeAPost } from "../utils/functions/likePost";
 import { useDispatch } from "react-redux";
-import { readUser, userDisLike, userLike } from "./../pages/Profile/userSlice";
+import {
+  addUserBookmark,
+  readUser,
+  removeUserBookmark,
+  userDisLike,
+  userLike,
+} from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
 import {
   deletePost,
@@ -65,24 +71,14 @@ const Post = ({ post, user, isUserProfile }) => {
 
   const addToBookmarkHandler = (id) => {
     addToBookmark(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {
-        dispatch(fetchAllPosts()).then(() => {
-          dispatch(readPosts(user._id)).then(() => {
-            toast.success("Added to Bookmark");
-          });
-        });
-      });
+      dispatch(addUserBookmark(id));
+      toast.success("Added to Bookmark");
     });
   };
   const removeFromBookmarkHandler = (id) => {
     removeFromBookmark(id, user._id).then(() => {
-      dispatch(readUser()).then(() => {
-        dispatch(fetchAllPosts()).then(() => {
-          dispatch(readPosts(user._id)).then(() => {
-            toast.success("Removed from Bookmark");
-          });
-        });
-      });
+      dispatch(removeUserBookmark(id));
+      toast.success("Removed from Bookmark");
     });
   };
 
