@@ -14,6 +14,7 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
   const editHandler = async () => {
     dispatch(editPost({ postId, description })).then(() => {
       dispatch(editUserPost({ postId, description }));
+
       toast.success("Post Edited");
       setIsPostOpen(false);
     });

@@ -12,6 +12,7 @@ import { unFollow } from "./../../../utils/functions/unfollow";
 import { follow } from "./../../../utils/functions/follow";
 import { useGetPosts } from "./../../../hooks/useGetPosts";
 import { readUserById } from "../../../utils/functions/readUserById";
+import { followed, readOtherUser, unfollowed } from "./otherUserSlice";
 
 const OtherProfile = () => {
   const [paramId, setParamId] = useState("");
@@ -22,27 +23,37 @@ const OtherProfile = () => {
     setParamId(id);
   }, [id]);
 
-  const user = useGetUser(paramId);
-
   const dispatch = useDispatch();
 
   const mainUser = useSelector((state) => state.user.user);
 
-  const userId = mainUser._id;
+  const userId = mainUser?._id;
 
-  const posts = useGetPosts(user._id);
+  const user = useSelector((state) => state.otherUser.otherUser);
+  useEffect(() => {
+    dispatch(readOtherUser(paramId));
+  }, [paramId]);
+
+  useEffect(() => {
+    dispatch(readUser());
+  }, [user?.followers]);
+
+  const posts = useGetPosts(user?._id);
 
   const followHandler = async () => {
-    follow({ followUserId: user._id, userId }).then(() => {
-      dispatch(followUser({ followUserId: user._id, userId }));
+    follow({ followUserId: user?._id, userId }).then(() => {
+      dispatch(followed(user?._id));
+      dispatch(followUser({ followUserId: user?._id, userId }));
 
       toast.success("Following");
     });
   };
 
   const unFollowHandler = async () => {
-    unFollow({ followUserId: user._id, userId }).then(() => {
-      dispatch(unfollowUser({ followUserId: user._id, userId }));
+    unFollow({ followUserId: user?._id, userId }).then(() => {
+      dispatch(unfollowed(user?._id));
+
+      dispatch(unfollowUser({ followUserId: user?._id, userId }));
 
       toast.success("unfollowed");
     });
@@ -99,7 +110,8 @@ const OtherProfile = () => {
 
                     {user && (
                       <>
-                        {mainUser && mainUser?.following?.includes(user._id) ? (
+                        {mainUser &&
+                        mainUser?.following?.includes(user?._id) ? (
                           <button
                             className="btn btn-light h-25 fw-semibold"
                             onClick={unFollowHandler}>
