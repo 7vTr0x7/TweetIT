@@ -21,7 +21,34 @@ const posts = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    explorePostLike: (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload.postId
+      );
+      const count = state.posts[index].likesCount + 1;
+      const likes = [...state.posts[index].likes, action.payload.userId];
+      state.posts[index] = {
+        ...state.posts[index],
+        likesCount: count,
+        likes: likes,
+      };
+    },
+    explorePostDislike: (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload.postId
+      );
+      const count = state.posts[index].likesCount - 1;
+      const likes = state.posts[index].likes.filter(
+        (user) => user.toString() !== action.payload.userId
+      );
+      state.posts[index] = {
+        ...state.posts[index],
+        likesCount: count,
+        likes: likes,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAllPosts.pending, (state, action) => {
       state.status = "Loading";
@@ -37,4 +64,5 @@ const posts = createSlice({
   },
 });
 
+export const { explorePostDislike, explorePostLike } = posts.actions;
 export default posts.reducer;

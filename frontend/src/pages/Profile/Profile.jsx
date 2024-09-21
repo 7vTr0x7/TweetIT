@@ -196,7 +196,7 @@ const Profile = () => {
                 posts.length > 0 &&
                 posts.map((post) => (
                   <div key={post._id}>
-                    <Post post={post} user={user} />
+                    <Post post={post} user={user} isUserProfile={true} />
                   </div>
                 ))}
             </div>

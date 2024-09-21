@@ -90,4 +90,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { userDisLike, userLike } = userSlice.actions;
 export default userSlice.reducer;

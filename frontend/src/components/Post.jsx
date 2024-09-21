@@ -12,42 +12,54 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa6";
 import { likeAPost } from "../utils/functions/likePost";
 import { useDispatch } from "react-redux";
-import { readUser } from "./../pages/Profile/userSlice";
+import { readUser, userDisLike, userLike } from "./../pages/Profile/userSlice";
 import { dislikeAPost } from "../utils/functions/dislikePost";
-import { deletePost, readPosts } from "../pages/Home/features/userPostSlice";
+import {
+  deletePost,
+  postDislike,
+  postLike,
+  readPosts,
+} from "../pages/Home/features/userPostSlice";
 import { addToBookmark } from "../utils/functions/addToBookmark";
 import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
 import AddPost from "./AddPost";
-import { fetchAllPosts } from "../pages/Explore/postsSlice";
+import {
+  explorePostDislike,
+  explorePostLike,
+  fetchAllPosts,
+} from "../pages/Explore/postsSlice";
 
-const Post = ({ post, user }) => {
+const Post = ({ post, user, isUserProfile }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-
   const date = new Date(post.createdAt);
 
   const dispatch = useDispatch();
 
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
-      dispatch(fetchAllPosts()).then(() => {
-        dispatch(readUser()).then(() => {
-          dispatch(readPosts(user._id)).then(() => {
-            toast.success("Like Added");
-          });
-        });
-      });
+      if (isUserProfile) {
+        dispatch(postLike({ postId: id, userId: user._id }));
+        dispatch(userLike(id));
+        toast.success("Like Added");
+      } else {
+        dispatch(explorePostLike({ postId: id, userId: user._id }));
+        dispatch(userLike(id));
+        toast.success("Like Added");
+      }
     });
   };
   const dislikeHandler = async (id) => {
     dislikeAPost(id, user._id).then(() => {
-      dispatch(fetchAllPosts()).then(() => {
-        dispatch(readUser()).then(() => {
-          dispatch(readPosts(user._id)).then(() => {
-            toast.success("Like Removed");
-          });
-        });
-      });
+      if (isUserProfile) {
+        dispatch(postDislike({ postId: id, userId: user._id }));
+        dispatch(userDisLike(id));
+        toast.success("disliked");
+      } else {
+        dispatch(explorePostDislike({ postId: id, userId: user._id }));
+        dispatch(userDisLike(id));
+        toast.success("disliked");
+      }
     });
   };
 
