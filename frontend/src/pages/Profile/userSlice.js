@@ -69,7 +69,6 @@ const userSlice = createSlice({
       const bookmarks = state.user.bookmarks.filter(
         (post) => post !== action.payload
       );
-      console.log(bookmarks);
       return {
         ...state,
         user: { ...state.user, bookmarks: bookmarks },
@@ -87,6 +86,16 @@ const userSlice = createSlice({
         ...state,
         user: action.payload,
       };
+    },
+    followUser: (state, action) => {
+      const following = [...state.user.following, action.payload.followUser];
+      state.user.following = following;
+    },
+    unfollowUser: (state, action) => {
+      const following = state.user.following.filter(
+        (user) => user !== action.payload.followUser
+      );
+      state.user.following = following;
     },
   },
   extraReducers: (builder) => {
@@ -119,5 +128,7 @@ export const {
   addUserBookmark,
   removeUserBookmark,
   editUserProfile,
+  followUser,
+  unfollowUser,
 } = userSlice.actions;
 export default userSlice.reducer;

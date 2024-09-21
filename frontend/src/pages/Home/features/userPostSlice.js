@@ -119,12 +119,9 @@ const userPostSlice = createSlice({
     },
     editUserPost: (state, action) => {
       const index = state.posts.findIndex(
-        (post) => post === action.payload.postId
+        (post) => post._id === action.payload.postId
       );
-      state.posts[index] = {
-        ...state.posts[index],
-        description: action.payload.description,
-      };
+      state.posts[index].description = action.payload.description;
     },
   },
   extraReducers: (builder) => {

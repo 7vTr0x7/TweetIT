@@ -7,7 +7,7 @@ import { useGetUser } from "../../../hooks/useGetUser";
 import Post from "./../../../components/Post";
 import FollowSection from "../../../components/FollowSection";
 import { useDispatch, useSelector } from "react-redux";
-import { readUser } from "../userSlice";
+import { followUser, readUser, unfollowUser } from "../userSlice";
 import { unFollow } from "./../../../utils/functions/unfollow";
 import { follow } from "./../../../utils/functions/follow";
 import { useGetPosts } from "./../../../hooks/useGetPosts";
@@ -33,29 +33,19 @@ const OtherProfile = () => {
   const posts = useGetPosts(user._id);
 
   const followHandler = async () => {
-    const followed = await follow({ followUserId: user._id, userId });
-    if (followed) {
-      readUserById(user._id).then(() => {
-        dispatch(readUser()).then(() => {
-          toast.success("Following");
-        });
-      });
-    }
-  };
-  const unFollowHandler = async () => {
-    const unFollowed = await unFollow({
-      followUserId: user._id,
-      userId,
+    follow({ followUserId: user._id, userId }).then(() => {
+      dispatch(followUser({ followUserId: user._id, userId }));
+
+      toast.success("Following");
     });
-    if (unFollowed) {
-      dispatch(readUser()).then(() => {
-        readUserById(user._id).then(() => {
-          dispatch(readUser()).then(() => {
-            toast.success("unFollowed");
-          });
-        });
-      });
-    }
+  };
+
+  const unFollowHandler = async () => {
+    unFollow({ followUserId: user._id, userId }).then(() => {
+      dispatch(unfollowUser({ followUserId: user._id, userId }));
+
+      toast.success("unfollowed");
+    });
   };
 
   return (
