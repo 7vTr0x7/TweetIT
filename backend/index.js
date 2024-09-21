@@ -189,7 +189,9 @@ const deletePost = async (postId, userId) => {
   try {
     const user = await SocialUser.findById(userId);
     user.posts = [...user.posts].filter((id) => id.toString() !== postId);
-    user.bookmark = [...user.bookmark].filter((id) => id.toString() !== postId);
+    user.bookmarks = [...user.bookmarks].filter(
+      (id) => id.toString() !== postId
+    );
     user.likedPosts = [...user.likedPosts].filter(
       (id) => id.toString() !== postId
     );

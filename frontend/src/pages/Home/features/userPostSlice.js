@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 export const readPosts = createAsyncThunk("readPosts", async (id) => {
   try {
@@ -52,6 +53,7 @@ export const deletePost = createAsyncThunk(
   "deletePost",
   async ({ userId, postId }) => {
     try {
+      console.log({ userId, postId });
       const res = await fetch(
         `https://tweet-it-backend.vercel.app/api/user/posts/${postId}`,
         {
@@ -115,6 +117,15 @@ const userPostSlice = createSlice({
         likes: likes,
       };
     },
+    editUserPost: (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post === action.payload.postId
+      );
+      state.posts[index] = {
+        ...state.posts[index],
+        description: action.payload.description,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(readPosts.pending, (state, action) => {
@@ -148,6 +159,7 @@ const userPostSlice = createSlice({
   },
 });
 
-export const { updatePosts, postDislike, postLike } = userPostSlice.actions;
+export const { updatePosts, postDislike, postLike, editUserPost } =
+  userPostSlice.actions;
 
 export default userPostSlice.reducer;

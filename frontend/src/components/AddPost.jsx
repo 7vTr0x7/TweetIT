@@ -1,12 +1,10 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaRegImage } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
-import { readUser } from "../pages/Profile/userSlice";
-import { editPost, readPosts } from "../pages/Home/features/userPostSlice";
-import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { fetchAllPosts } from "../pages/Explore/postsSlice";
+import { editPost, editUserPost } from "../pages/Home/features/userPostSlice";
 
 const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
   const [description, setDescription] = useState(content);
@@ -15,14 +13,9 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
 
   const editHandler = async () => {
     dispatch(editPost({ postId, description })).then(() => {
-      dispatch(readUser()).then(() => {
-        dispatch(fetchAllPosts()).then(() => {
-          dispatch(readPosts(userId)).then(() => {
-            toast.success("Post Edited");
-            setIsPostOpen(false);
-          });
-        });
-      });
+      dispatch(editUserPost({ postId, description }));
+      toast.success("Post Edited");
+      setIsPostOpen(false);
     });
   };
 
