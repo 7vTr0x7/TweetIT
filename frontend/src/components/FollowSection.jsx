@@ -58,12 +58,16 @@ const FollowSection = () => {
                       }}
                     />
                   </Link>
-                  <span className="px-2 fw-lighter mt-1">{user.userName}</span>
-                  <span
+                  <span className="px-2 fw-semibold mt-1">
+                    {user.userName.slice(0, 7)}...
+                  </span>
+                  <small
                     className="fw-semibold text-secondary mt-1"
                     style={{ cursor: "pointer" }}>
-                    follow
-                  </span>
+                    {mainUser && mainUser?.following?.includes(user._id)
+                      ? "unfollow"
+                      : "follow"}
+                  </small>
                 </div>
               ))}
           </div>

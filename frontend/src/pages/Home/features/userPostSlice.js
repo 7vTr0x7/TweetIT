@@ -89,6 +89,32 @@ const userPostSlice = createSlice({
         posts: action.payload,
       };
     },
+    postLike: (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload.postId
+      );
+      const count = state.posts[index].likesCount + 1;
+      const likes = [...state.posts[index].likes, action.payload.userId];
+      state.posts[index] = {
+        ...state.posts[index],
+        likesCount: count,
+        likes: likes,
+      };
+    },
+    postDislike: (state, action) => {
+      const index = state.posts.findIndex(
+        (post) => post._id === action.payload.postId
+      );
+      const count = state.posts[index].likesCount - 1;
+      const likes = state.posts[index].likes.filter(
+        (user) => user.toString() !== action.payload.userId
+      );
+      state.posts[index] = {
+        ...state.posts[index],
+        likesCount: count,
+        likes: likes,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(readPosts.pending, (state, action) => {
@@ -122,6 +148,6 @@ const userPostSlice = createSlice({
   },
 });
 
-export const { updatePosts } = userPostSlice.actions;
+export const { updatePosts, postDislike, postLike } = userPostSlice.actions;
 
 export default userPostSlice.reducer;

@@ -48,7 +48,24 @@ const userSlice = createSlice({
     error: null,
     status: "pending",
   },
-  reducers: {},
+  reducers: {
+    userLike: (state, action) => {
+      const posts = [...state.user.likedPosts, action.payload];
+      return {
+        ...state,
+        user: { ...state.user, likedPosts: posts },
+      };
+    },
+    userDisLike: (state, action) => {
+      const posts = state.user.likedPosts.filter(
+        (post) => post !== action.payload
+      );
+      return {
+        ...state,
+        user: { ...state.user, likedPosts: posts },
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(readUser.pending, (state, action) => {
       state.status = "pending";
