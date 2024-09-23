@@ -11,6 +11,7 @@ import { useGetPosts } from "../../../hooks/useGetPosts";
 import { useSortPost } from "../../../hooks/useSortPost";
 import { readPosts } from "./userPostSlice";
 import AddPost from "../../../components/AddPost";
+import { Toaster } from "react-hot-toast";
 
 const Feed = () => {
   const [isPostOpen, setIsPostOpen] = useState(false);
@@ -92,6 +93,7 @@ const Feed = () => {
             </div>
           ))}
       </div>
+      <Toaster />
     </>
   );
 };
