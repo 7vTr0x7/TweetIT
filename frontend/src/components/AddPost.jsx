@@ -32,6 +32,7 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
     setImageUrl(true);
     const file = e.target.files[0];
     if (!file) return;
+    toast.success("Please Wait ...");
 
     const formData = new FormData();
     formData.append("file", file);
