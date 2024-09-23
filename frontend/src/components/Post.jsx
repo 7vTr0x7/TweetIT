@@ -29,6 +29,7 @@ import {
 import { addToBookmark } from "../utils/functions/addToBookmark";
 import { removeFromBookmark } from "../utils/functions/removeFromBookmark";
 import AddPost from "./AddPost";
+import { useNavigate } from "react-router-dom";
 import {
   explorePostDislike,
   explorePostLike,
@@ -41,6 +42,7 @@ const Post = ({ post, user, isUserProfile }) => {
   const date = new Date(post.createdAt);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const likeHandler = async (id) => {
     likeAPost(id, user._id).then(() => {
@@ -99,13 +101,24 @@ const Post = ({ post, user, isUserProfile }) => {
     });
   };
 
+  const handleNavigate = (postUser) => {
+    if (postUser._id == user._id) {
+      navigate("/profile");
+    } else {
+      navigate(`/user-profile/${postUser._id}`);
+    }
+  };
+
   return (
     <>
       <div
         className=" mt-3 p-3 rounded-3 "
         style={{ backgroundColor: "white " }}>
         <div className="d-flex justify-content-between align-content-center">
-          <div className="d-flex ">
+          <div
+            className="d-flex "
+            style={{ cursor: "pointer" }}
+            onClick={() => handleNavigate(post.user)}>
             <img
               src={post.user.avatarUrl}
               style={{ height: "50px", width: "50px", borderRadius: "100%" }}
@@ -163,17 +176,21 @@ const Post = ({ post, user, isUserProfile }) => {
         <div className="my-4 px-2">
           <p>{post.description}</p>
         </div>
-        {post?.imageUrl && (
+        {post?.imageUrl && !post?.videoUrl && (
           <div className="mb-3">
             <img src={post?.imageUrl} className="w-100" />
           </div>
         )}
-        {post?.videoUrl && (
-          <div style={{ marginTop: "20px" }}>
-            <video width="100%" controls>
+        {post?.videoUrl && !post?.imageUrl && (
+          <div className="mb-3">
+            <video width="400" controls>
               <source src={post?.videoUrl} type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
+          </div>
+        )}
+        {post?.gifUrl && !post?.imageUrl && (
+          <div className="mb-3">
+            <img src={post?.gifUrl} className="w-100" />
           </div>
         )}
         <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">

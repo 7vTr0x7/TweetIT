@@ -12,6 +12,7 @@ import {
 import { RxCross2 } from "react-icons/rx";
 import { readUser } from "../pages/Profile/userSlice";
 import { addPost } from "../utils/functions/addPost";
+import { IoVideocamOutline } from "react-icons/io5";
 
 const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
   const [description, setDescription] = useState(content || "");
@@ -27,6 +28,7 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
   const userId = user?._id;
 
   const handleImageUpload = async (e) => {
+    setImageUrl(true);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -45,7 +47,6 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
       );
       const data = await res.json();
       setImageUrl(data.url);
-      setIsImageSelect(true);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -59,9 +60,71 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
     }
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 5000000) {
-      toast.error("file is too big");
+    if (file.size > 6000000) {
+      toast.error("file is size is > 6MB");
       return;
+    }
+    toast.success("Please Wait ...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "fww4myo8");
+    formData.append("cloud_name", "dbzzejye6");
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/dbzzejye6/video/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      toast.success("Please Wait ...");
+
+      console.log(data);
+      setVideoUrl(data.url);
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
+  const handleGifUpload = async (e) => {
+    if (isImageSelect) {
+      toast.error("image is selected");
+      return;
+    }
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 6000000) {
+      toast.error("file is size is > 6MB");
+      return;
+    }
+    toast.success("Please Wait ...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "fww4myo8");
+    formData.append("cloud_name", "dbzzejye6");
+
+    toast.success("Please Wait ...");
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/dbzzejye6/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      toast.success("Please Wait ...");
+
+      console.log(data);
+      setVideoUrl(data.url);
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -121,6 +184,19 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
             </span>
           </div>
         )}
+        {videoUrl && (
+          <div className="position-relative">
+            <img src={videoUrl} className="w-100" />
+            <span
+              onClick={() => {
+                setVideoUrl(null);
+              }}
+              className="position-absolute"
+              style={{ top: "10px", right: "10px" }}>
+              <RxCross2 style={{ fontSize: "25px" }} />
+            </span>
+          </div>
+        )}
         <div>
           <textarea
             className="form-control my-3"
@@ -142,11 +218,26 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
               onChange={handleImageUpload}
             />
 
-            {/* Video Icon */}
-            <label htmlFor="video-upload">
+            <label htmlFor="gif-upload">
               <MdGif
                 style={{
                   fontSize: "30px",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                }}
+              />
+            </label>
+            <input
+              type="file"
+              id="gif-upload"
+              accept="image/gif"
+              style={{ display: "none" }}
+              onChange={handleGifUpload}
+            />
+            <label htmlFor="video-upload">
+              <IoVideocamOutline
+                style={{
+                  fontSize: "25px",
                   marginLeft: "10px",
                   cursor: "pointer",
                 }}

@@ -53,7 +53,6 @@ export const deletePost = createAsyncThunk(
   "deletePost",
   async ({ userId, postId }) => {
     try {
-      console.log({ userId, postId });
       const res = await fetch(
         `https://tweet-it-backend.vercel.app/api/user/posts/${postId}`,
         {

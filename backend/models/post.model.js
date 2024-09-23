@@ -15,6 +15,9 @@ const SocialPostSchema = new mongoose.Schema(
     videoUrl: {
       type: String,
     },
+    gifUrl: {
+      type: String,
+    },
     likesCount: {
       type: Number,
 
