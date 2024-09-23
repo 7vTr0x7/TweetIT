@@ -79,13 +79,16 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
           videoUrl,
         },
       };
-      const res = await fetch(`http://localhost:4000/api/user/post`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        `https://tweet-it-backend.vercel.app/api/user/post`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const resData = await res.json();
     } catch (error) {
