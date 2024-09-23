@@ -48,7 +48,7 @@ const Feed = () => {
             What is happening?
           </p>
         </div>
-        {isPostOpen && <AddPost setIsPostOpen={setIsPostOpen} />}
+        {isPostOpen && <AddPost setIsOpen={setIsPostOpen} />}
 
         <div className="position-relative" style={{ backgroundColor: "white" }}>
           <div className="d-flex justify-content-between  my-4 px-3 py-2">

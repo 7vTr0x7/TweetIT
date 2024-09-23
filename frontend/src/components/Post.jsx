@@ -133,7 +133,7 @@ const Post = ({ post, user, isUserProfile }) => {
         <div className="position-relative">
           {isEdit && (
             <AddPost
-              setIsPostOpen={setIsEdit}
+            setIsOpen={setIsEdit}
               isEdit={isEdit}
               postId={post._id}
               userId={user._id}

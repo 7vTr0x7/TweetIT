@@ -6,8 +6,8 @@ import { MdGif } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { editPost, editUserPost } from "../pages/Home/features/userPostSlice";
 
-const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
-  const [description, setDescription] = useState(content);
+const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
+  const [description, setDescription] = useState(content || "");
 
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
       dispatch(editUserPost({ postId, description }));
 
       toast.success("Post Edited");
-      setIsPostOpen(false);
+      setIsOpen(false);
     });
   };
 
@@ -30,7 +30,7 @@ const AddPost = ({ setIsPostOpen, isEdit, postId, userId, content }) => {
           top: isEdit ? "0px" : "20px",
           zIndex: 10,
         }}>
-        <span className="px-1 py-3" onClick={() => setIsPostOpen(false)}>
+        <span className="px-1 py-3" onClick={() => setIsOpen(false)}>
           <FaArrowLeftLong style={{ fontSize: "20px" }} />
         </span>
         <div>
