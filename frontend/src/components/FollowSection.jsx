@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FiSearch } from "react-icons/fi";
 import { useFetchUsers } from "../hooks/useFetchUsers";
@@ -15,17 +15,34 @@ import {
 import { unFollow } from "../utils/functions/unfollow";
 
 const FollowSection = () => {
+  const [text, setText] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const users = useFetchUsers();
 
   const dispatch = useDispatch();
 
   const mainUser = useSelector((state) => state.user.user);
 
-  const filteredUsers = users.filter((user) => user._id !== mainUser._id);
+  useEffect(() => {
+    const filtered = users.filter((user) => user._id !== mainUser._id);
+    setFilteredUsers(filtered);
+  }, [users, mainUser._id]);
 
   useEffect(() => {
     dispatch(readUser());
   }, []);
+
+  useEffect(() => {
+    if (text !== "") {
+      const filtered = filteredUsers.filter(
+        (user) => user.userName.includes(text) || user.userAt.includes(text)
+      );
+      setFilteredUsers(filtered);
+    } else {
+      const filtered = users.filter((user) => user._id !== mainUser._id);
+      setFilteredUsers(filtered);
+    }
+  }, [text]);
 
   const followHandler = async (user, userId) => {
     await follow({ followUserId: user?._id, userId });
@@ -58,6 +75,8 @@ const FollowSection = () => {
           <input
             className="form-control mx-1 border-0 bg-transparent"
             placeholder="Search"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
           />
         </div>
 
