@@ -8,7 +8,6 @@ const SocialPostSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     imageUrl: {
       type: String,
@@ -18,7 +17,7 @@ const SocialPostSchema = new mongoose.Schema(
     },
     likesCount: {
       type: Number,
-      required: true,
+
       default: 0,
     },
     likes: [
