@@ -34,10 +34,10 @@ const otherUserSlice = createSlice({
       return state.otherUser;
     },
     followed: (state, action) => {
-      state.otherUser.followers.push(action.payload);
+      state.otherUser.followers?.push(action.payload);
     },
     unfollowed: (state, action) => {
-      state.otherUser.followers = state.otherUser.followers.filter(
+      state.otherUser.followers = state.otherUser?.followers?.filter(
         (followerId) => followerId !== action.payload
       );
     },
