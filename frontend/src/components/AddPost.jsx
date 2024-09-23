@@ -4,8 +4,14 @@ import { FaRegImage } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { editPost, editUserPost } from "../pages/Home/features/userPostSlice";
+import {
+  editPost,
+  editUserPost,
+  readPosts,
+} from "../pages/Home/features/userPostSlice";
 import { RxCross2 } from "react-icons/rx";
+import { readUser } from "../pages/Profile/userSlice";
+import { addPost } from "../utils/functions/addPost";
 
 const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
   const [description, setDescription] = useState(content || "");
@@ -70,30 +76,23 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
   };
 
   const postHandler = async () => {
-    try {
-      const data = {
-        userId,
-        post: {
-          description,
-          imageUrl,
-          videoUrl,
-        },
-      };
-      const res = await fetch(
-        `https://tweet-it-backend.vercel.app/api/user/post`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+    const data = {
+      userId,
+      post: {
+        description,
+        imageUrl,
+        videoUrl,
+      },
+    };
 
-      const resData = await res.json();
-    } catch (error) {
-      console.log(error);
-    }
+    addPost(data).then(() => {
+      dispatch(readUser()).then(() => {
+        dispatch(readPosts(userId)).then(() => {
+          toast.success("Post Added");
+          setIsOpen(false);
+        });
+      });
+    });
   };
 
   return (
