@@ -183,7 +183,7 @@ const Post = ({ post, user, isUserProfile }) => {
         )}
         {post?.videoUrl && !post?.imageUrl && (
           <div className="mb-3">
-            <video width="400" controls>
+            <video className="w-100" controls>
               <source src={post?.videoUrl} type="video/mp4" />
             </video>
           </div>

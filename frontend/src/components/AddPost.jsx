@@ -19,6 +19,7 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
+  const [gifUrl, setGifUrl] = useState(null);
   const [isImageSelect, setIsImageSelect] = useState(false);
 
   const dispatch = useDispatch();
@@ -82,7 +83,6 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
       const data = await res.json();
       toast.success("Please Wait ...");
 
-      console.log(data);
       setVideoUrl(data.url);
     } catch (error) {
       console.log(error.message);
@@ -107,8 +107,6 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
     formData.append("upload_preset", "fww4myo8");
     formData.append("cloud_name", "dbzzejye6");
 
-    toast.success("Please Wait ...");
-
     try {
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/dbzzejye6/image/upload`,
@@ -120,8 +118,7 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
       const data = await res.json();
       toast.success("Please Wait ...");
 
-      console.log(data);
-      setVideoUrl(data.url);
+      setGifUrl(data.url);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -144,6 +141,7 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
         description,
         imageUrl,
         videoUrl,
+        gifUrl,
       },
     };
 
@@ -186,10 +184,25 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
         )}
         {videoUrl && (
           <div className="position-relative">
-            <img src={videoUrl} className="w-100" />
+            <video className="w-100" controls>
+              <source src={videoUrl} type="video/mp4" />
+            </video>
             <span
               onClick={() => {
                 setVideoUrl(null);
+              }}
+              className="position-absolute"
+              style={{ top: "10px", right: "10px" }}>
+              <RxCross2 style={{ fontSize: "25px" }} />
+            </span>
+          </div>
+        )}
+        {gifUrl && (
+          <div className="position-relative">
+            <img src={gifUrl} className="w-100" />
+            <span
+              onClick={() => {
+                setGifUrl(null);
               }}
               className="position-absolute"
               style={{ top: "10px", right: "10px" }}>
