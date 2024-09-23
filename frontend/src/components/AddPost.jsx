@@ -3,16 +3,22 @@ import toast, { Toaster } from "react-hot-toast";
 import { FaRegImage } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { MdGif } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { editPost, editUserPost } from "../pages/Home/features/userPostSlice";
+import { RxCross2 } from "react-icons/rx";
 
-const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
+const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
   const [description, setDescription] = useState(content || "");
 
   const [imageUrl, setImageUrl] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
+  const [isImageSelect, setIsImageSelect] = useState(false);
 
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
+
+  const userId = user?._id;
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -32,7 +38,9 @@ const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
         }
       );
       const data = await res.json();
+      console.log(data);
       setImageUrl(data.url);
+      setIsImageSelect(true);
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -40,6 +48,10 @@ const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
   };
 
   const handleVideoUpload = async (e) => {
+    if (isImageSelect) {
+      toast.error("image is selected");
+      return;
+    }
     const file = e.target.files[0];
     if (!file) return;
     if (file.size > 5000000) {
@@ -57,6 +69,30 @@ const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
     });
   };
 
+  const postHandler = async () => {
+    try {
+      const data = {
+        userId,
+        post: {
+          description,
+          imageUrl,
+          videoUrl,
+        },
+      };
+      const res = await fetch(`http://localhost:4000/api/user/post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const resData = await res.json();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center ">
       <div
@@ -71,8 +107,17 @@ const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
           <FaArrowLeftLong style={{ fontSize: "20px" }} />
         </span>
         {imageUrl && (
-          <div>
+          <div className="position-relative">
             <img src={imageUrl} className="w-100" />
+            <span
+              onClick={() => {
+                setIsImageSelect(false);
+                setImageUrl(null);
+              }}
+              className="position-absolute"
+              style={{ top: "10px", right: "10px" }}>
+              <RxCross2 style={{ fontSize: "25px" }} />
+            </span>
           </div>
         )}
         <div>
@@ -119,7 +164,9 @@ const AddPost = ({ setIsOpen, isEdit, postId, userId, content }) => {
               Edit
             </button>
           ) : (
-            <button className="btn btn-light fw-semibold">Post</button>
+            <button className="btn btn-light fw-semibold" onClick={postHandler}>
+              Post
+            </button>
           )}
         </div>
       </div>

@@ -123,7 +123,7 @@ const Post = ({ post, user, isUserProfile }) => {
               style={{ fontSize: "20px", cursor: "pointer" }}
               onClick={() => setIsOptionOpen((prev) => !prev)}>
               {isOptionOpen ? (
-                <RxCross2 style={{ fontSize: "25px" }} />
+                <RxCross2 style={{ fontSize: "35px" }} />
               ) : (
                 <HiDotsVertical />
               )}
@@ -133,7 +133,7 @@ const Post = ({ post, user, isUserProfile }) => {
         <div className="position-relative">
           {isEdit && (
             <AddPost
-            setIsOpen={setIsEdit}
+              setIsOpen={setIsEdit}
               isEdit={isEdit}
               postId={post._id}
               userId={user._id}
@@ -163,6 +163,19 @@ const Post = ({ post, user, isUserProfile }) => {
         <div className="my-4 px-2">
           <p>{post.description}</p>
         </div>
+        {post?.imageUrl && (
+          <div className="mb-3">
+            <img src={post?.imageUrl} className="w-100" />
+          </div>
+        )}
+        {post?.videoUrl && (
+          <div style={{ marginTop: "20px" }}>
+            <video width="100%" controls>
+              <source src={post?.videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
         <div className="d-flex justify-content-between px-3 align-content-center fw-semibold">
           <p className="m-0">
             {user && user?.likedPosts && user?.likedPosts.includes(post._id) ? (
