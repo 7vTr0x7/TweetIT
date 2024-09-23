@@ -34,19 +34,15 @@ const otherUserSlice = createSlice({
       return state.otherUser;
     },
     followed: (state, action) => {
-      const followers = [
-        ...state.otherUser.followers,
-        action.payload.followUser,
-      ];
-      state.otherUser.followers = followers;
+      state.otherUser.followers.push(action.payload);
     },
     unfollowed: (state, action) => {
-      const followers = state.otherUser.followers.filter(
-        (user) => user !== action.payload
+      state.otherUser.followers = state.otherUser.followers.filter(
+        (followerId) => followerId !== action.payload
       );
-      state.otherUser.followers = followers;
     },
   },
+
   extraReducers: (builder) => {
     builder.addCase(readOtherUser.pending, (state, action) => {
       state.status = "pending";

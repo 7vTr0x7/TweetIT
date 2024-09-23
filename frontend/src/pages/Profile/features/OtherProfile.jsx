@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useLocation, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import FollowSection from "../../../components/FollowSection";
 import Header from "../../../components/Header";
 import Nav from "../../../components/Nav";
-import { useGetUser } from "../../../hooks/useGetUser";
-import Post from "./../../../components/Post";
-import FollowSection from "../../../components/FollowSection";
-import { useDispatch, useSelector } from "react-redux";
 import { followUser, readUser, unfollowUser } from "../userSlice";
-import { unFollow } from "./../../../utils/functions/unfollow";
-import { follow } from "./../../../utils/functions/follow";
+import Post from "./../../../components/Post";
 import { useGetPosts } from "./../../../hooks/useGetPosts";
-import { readUserById } from "../../../utils/functions/readUserById";
+import { follow } from "./../../../utils/functions/follow";
+import { unFollow } from "./../../../utils/functions/unfollow";
 import { followed, readOtherUser, unfollowed } from "./otherUserSlice";
 
 const OtherProfile = () => {
   const [paramId, setParamId] = useState("");
+  const [user, setUser] = useState({});
   const searchUserId = useParams();
   const { id } = searchUserId;
 
@@ -29,7 +28,15 @@ const OtherProfile = () => {
 
   const userId = mainUser?._id;
 
-  const user = useSelector((state) => state.otherUser.otherUser);
+  const otherUser = useSelector((state) => state.otherUser.otherUser);
+
+  useEffect(() => {
+    if (otherUser) {
+      setUser(otherUser);
+      console.log(otherUser);
+    }
+  }, [otherUser]);
+
   useEffect(() => {
     dispatch(readOtherUser(paramId));
   }, [paramId]);
@@ -41,22 +48,24 @@ const OtherProfile = () => {
   const posts = useGetPosts(user?._id);
 
   const followHandler = async () => {
-    follow({ followUserId: user?._id, userId }).then(() => {
-      dispatch(followed(user?._id));
-      dispatch(followUser({ followUserId: user?._id, userId }));
+    await follow({ followUserId: user?._id, userId });
+    dispatch(readOtherUser(user?._id));
 
-      toast.success("Following");
-    });
+    dispatch(followed(user?._id));
+    dispatch(followUser({ followUserId: user?._id, userId }));
+
+    toast.success("Following");
   };
 
   const unFollowHandler = async () => {
-    unFollow({ followUserId: user?._id, userId }).then(() => {
-      dispatch(unfollowed(user?._id));
+    await unFollow({ followUserId: user?._id, userId });
+    dispatch(readOtherUser(user?._id));
 
-      dispatch(unfollowUser({ followUserId: user?._id, userId }));
+    dispatch(unfollowed(user?._id));
 
-      toast.success("unfollowed");
-    });
+    dispatch(unfollowUser({ followUserId: user?._id, userId }));
+
+    toast.success("unfollowed");
   };
 
   return (

@@ -88,8 +88,7 @@ const userSlice = createSlice({
       };
     },
     followUser: (state, action) => {
-      const following = [...state.user.following, action.payload.followUser];
-      state.user.following = following;
+      state.user.following.push(action.payload.followUser);
     },
     unfollowUser: (state, action) => {
       const following = state.user.following.filter(
