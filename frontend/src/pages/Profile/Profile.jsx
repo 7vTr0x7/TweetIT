@@ -7,6 +7,8 @@ import Nav from "../../components/Nav";
 import { readPosts } from "../Home/features/userPostSlice";
 import Post from "./../../components/Post";
 import { editUser, readUser } from "./userSlice";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { readUserById } from "../../utils/functions/readUserById";
 
 const avatars = [
   "https://i.pravatar.cc/300?img=7",
@@ -20,12 +22,40 @@ const Profile = () => {
   const [user, setUser] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const [isFollowerOpen, setIsFollowerOpen] = useState(false);
+  const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   const dispatch = useDispatch();
 
   let userData = useSelector((state) => state.user.user);
 
   let posts = useSelector((state) => state.posts.posts);
+
+  const getUsers = async () => {
+    try {
+      if (userData?.followers?.length > 0) {
+        const followers = await Promise.all(
+          userData?.followers.map(async (user) => await readUserById(user))
+        );
+        setFollowers(followers);
+      }
+      if (userData?.following?.length > 0) {
+        const following = await Promise.all(
+          userData?.following.map(async (user) => await readUserById(user))
+        );
+
+        setFollowing(following);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, [userData]);
 
   useEffect(() => {
     dispatch(readUser()).then(() => {
@@ -77,17 +107,117 @@ const Profile = () => {
                       <p className="fs-6 px-3 m-0">{user.bio}</p>
                       <hr />
 
+                      {isFollowerOpen && (
+                        <div
+                          className="position-absolute p-3 rounded-3 shadow-lg justify-content-center"
+                          style={{
+                            backgroundColor: "white",
+                            width: "200px",
+                            right: "150px",
+                          }}>
+                          <span
+                            className="px-1 py-3"
+                            onClick={() => setIsFollowerOpen(false)}>
+                            <FaArrowLeftLong style={{ fontSize: "20px" }} />
+                          </span>
+                          <div className="mt-2">
+                            {followers && followers.length > 0 ? (
+                              <>
+                                {followers.map((user) => (
+                                  <div
+                                    key={user._id}
+                                    className="d-flex mt-2 mx-0">
+                                    <div>
+                                      <img
+                                        alt={user.userName}
+                                        src={user.avatarUrl}
+                                        className="img-fluid"
+                                        style={{
+                                          height: "35px",
+                                          width: "35px",
+                                          borderRadius: "100%",
+                                        }}
+                                      />
+                                    </div>
+                                    <p className="m-0  px-3 fw-semibold mt-1 ">
+                                      {user.userName}
+                                    </p>
+                                  </div>
+                                ))}
+                              </>
+                            ) : (
+                              <p className="m-0 text-center fw-semibold">
+                                No Follower
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {isFollowingOpen && (
+                        <div
+                          className="position-absolute p-3 rounded-3 shadow-lg justify-content-center"
+                          style={{
+                            backgroundColor: "white",
+                            width: "200px",
+                            right: "0px",
+                          }}>
+                          <span
+                            className="px-1 py-3"
+                            onClick={() => setIsFollowingOpen(false)}>
+                            <FaArrowLeftLong style={{ fontSize: "20px" }} />
+                          </span>
+                          <div className="mt-2">
+                            {following && following.length > 0 ? (
+                              <>
+                                {following.map((user) => (
+                                  <div
+                                    key={user._id}
+                                    className="d-flex mt-2 mx-0">
+                                    <div>
+                                      <img
+                                        alt={user.userName}
+                                        src={user.avatarUrl}
+                                        className="img-fluid"
+                                        style={{
+                                          height: "35px",
+                                          width: "35px",
+                                          borderRadius: "100%",
+                                        }}
+                                      />
+                                    </div>
+                                    <p className="m-0  px-3 fw-semibold mt-1 ">
+                                      {user.userName}
+                                    </p>
+                                  </div>
+                                ))}
+                              </>
+                            ) : (
+                              <p className="m-0 text-center fw-semibold">
+                                No Following
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
                       <div className="d-flex justify-content-between">
                         <p className="fw-semibold m-0">
                           {user?.posts?.length} Post
                           {user?.posts?.length > 1 ? "s" : ""}
                         </p>
-                        <p className="fw-semibold m-0">
+
+                        <p
+                          className="fw-semibold m-0"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setIsFollowerOpen(true)}>
                           {user?.followers?.length} Follower
                           {user?.followers?.length > 1 ? "s" : ""}
                         </p>
 
-                        <p className="fw-semibold m-0">
+                        <p
+                          className="fw-semibold m-0"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setIsFollowingOpen(true)}>
                           {user?.following?.length} following
                         </p>
                       </div>
