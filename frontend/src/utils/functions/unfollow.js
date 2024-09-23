@@ -1,5 +1,7 @@
 export const unFollow = async ({ followUserId, userId }) => {
   try {
+    console.log(followUserId);
+    console.log(userId);
     const res = await fetch(
       `https://tweet-it-backend.vercel.app/api/users/unfollow/${followUserId}`,
       {

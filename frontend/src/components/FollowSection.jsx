@@ -3,8 +3,16 @@ import React, { useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useFetchUsers } from "../hooks/useFetchUsers";
 import { useDispatch, useSelector } from "react-redux";
-import { readUser } from "../pages/Profile/userSlice";
+import { followUser, readUser, unfollowUser } from "../pages/Profile/userSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { follow } from "../utils/functions/follow";
+import {
+  followed,
+  readOtherUser,
+  unfollowed,
+} from "../pages/Profile/features/otherUserSlice";
+import { unFollow } from "../utils/functions/unfollow";
 
 const FollowSection = () => {
   const users = useFetchUsers();
@@ -18,6 +26,27 @@ const FollowSection = () => {
   useEffect(() => {
     dispatch(readUser());
   }, []);
+
+  const followHandler = async (user, userId) => {
+    await follow({ followUserId: user?._id, userId });
+    dispatch(readOtherUser(user?._id));
+
+    dispatch(followed(user?._id));
+    dispatch(followUser({ followUserId: user?._id, userId }));
+
+    toast.success("Following");
+  };
+
+  const unFollowHandler = async (user, userId) => {
+    await unFollow({ followUserId: user?._id, userId });
+    dispatch(readOtherUser(user?._id));
+
+    dispatch(unfollowed(user?._id));
+
+    dispatch(unfollowUser({ followUserId: user?._id, userId }));
+
+    toast.success("unfollowed");
+  };
 
   return (
     <>
@@ -61,13 +90,21 @@ const FollowSection = () => {
                   <span className="px-2 fw-semibold mt-1">
                     {user.userName.slice(0, 7)}...
                   </span>
-                  <small
-                    className="fw-semibold text-secondary mt-1"
-                    style={{ cursor: "pointer" }}>
-                    {mainUser && mainUser?.following?.includes(user._id)
-                      ? "unfollow"
-                      : "follow"}
-                  </small>
+                  {mainUser && mainUser?.following?.includes(user._id) ? (
+                    <small
+                      onClick={() => unFollowHandler(user, mainUser?._id)}
+                      className="fw-semibold text-secondary mt-1"
+                      style={{ cursor: "pointer" }}>
+                      unfollow
+                    </small>
+                  ) : (
+                    <small
+                      onClick={() => followHandler(user, mainUser?._id)}
+                      className="fw-semibold text-secondary mt-1"
+                      style={{ cursor: "pointer" }}>
+                      follow
+                    </small>
+                  )}
                 </div>
               ))}
           </div>

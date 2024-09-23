@@ -33,7 +33,6 @@ const OtherProfile = () => {
   useEffect(() => {
     if (otherUser) {
       setUser(otherUser);
-      console.log(otherUser);
     }
   }, [otherUser]);
 
