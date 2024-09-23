@@ -44,7 +44,6 @@ const AddPost = ({ setIsOpen, isEdit, postId, content }) => {
         }
       );
       const data = await res.json();
-      console.log(data);
       setImageUrl(data.url);
       setIsImageSelect(true);
     } catch (error) {
